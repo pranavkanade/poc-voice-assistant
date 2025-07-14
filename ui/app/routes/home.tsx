@@ -26,6 +26,9 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   const [editingUserMessage, setEditingUserMessage] = useState(false);
   const [editedText, setEditedText] = useState("");
   const [showTranscriptPanel, setShowTranscriptPanel] = useState(false);
+  const [prdGenerating, setPrdGenerating] = useState(false);
+  const [generatedPRD, setGeneratedPRD] = useState<string | null>(null);
+  const [showPRD, setShowPRD] = useState(false);
 
   useEffect(() => {
     const vapiInstance = new Vapi(apiKey);
@@ -51,6 +54,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
 
     vapiInstance.on("speech-end", () => {
       console.log("Assistant stopped speaking");
+
       setIsSpeaking(false);
     });
 
@@ -109,6 +113,51 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
       vapiInstance?.stop();
     };
   }, [apiKey]);
+
+  useEffect(() => {
+    if (transcript.length - 1 >= 2 && isSpeaking) {
+      submitPRD();
+    }
+  }, [transcript.length, isSpeaking]);
+
+  const submitPRD = async () => {
+    try {
+      // Convert transcript to conversation string
+      const conversation = transcript
+        .slice(0, transcript.length - 1)
+        .map(
+          (msg) => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.text}`,
+        )
+        .join("\n");
+
+      if (!conversation.trim()) {
+        console.log("No conversation to submit");
+        return;
+      }
+
+      setPrdGenerating(true);
+      const formData = new FormData();
+      formData.append("conversation", conversation);
+
+      const response = await fetch("/api/prd", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const prdData = await response.json();
+        console.log("PRD generated successfully:", prdData);
+        setGeneratedPRD(prdData);
+        setShowPRD(true);
+      } else {
+        console.error("Failed to generate PRD:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error submitting PRD request:", error);
+    } finally {
+      setPrdGenerating(false);
+    }
+  };
 
   const startCall = () => {
     if (vapi) {
@@ -273,6 +322,14 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
             )}
           </div>
 
+          {/* PRD Generation Status */}
+          {prdGenerating && (
+            <div className="prd-status">
+              <div className="loading-spinner"></div>
+              <span>Generating PRD...</span>
+            </div>
+          )}
+
           {/* Voice Control */}
           <div className="voice-control">
             {!isConnected ? (
@@ -351,30 +408,59 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
               </div>
             )}
           </div>
+
+          {/* PRD Display Button */}
+          {generatedPRD && (
+            <div className="prd-control">
+              <button
+                onClick={() => setShowPRD(!showPRD)}
+                className="prd-button"
+              >
+                {showPRD ? "Hide PRD" : "View Generated PRD"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Transcript Toggle Button */}
+      {/* PRD Panel */}
+      {showPRD && generatedPRD && (
+        <div className="prd-panel">
+          <div className="prd-header">
+            <h3 className="prd-title">Product Requirements Document</h3>
+            <button onClick={() => setShowPRD(false)} className="close-button">
+              ×
+            </button>
+          </div>
+          <div className="prd-content">
+            <pre className="prd-text">{generatedPRD}</pre>
+          </div>
+        </div>
+      )}
+
+      {/* Control Buttons */}
       {transcript.length > 0 && (
-        <button
-          onClick={toggleTranscriptPanel}
-          className="transcript-toggle-button"
-          title={showTranscriptPanel ? "Hide Transcript" : "Show Transcript"}
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+        <div className="control-buttons">
+          <button
+            onClick={toggleTranscriptPanel}
+            className="control-button transcript-button"
+            title={showTranscriptPanel ? "Hide Transcript" : "Show Transcript"}
           >
-            <path
-              d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"
-              fill="currentColor"
-            />
-          </svg>
-          <span>{showTranscriptPanel ? "Hide" : "Show"} Transcript</span>
-        </button>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"
+                fill="currentColor"
+              />
+            </svg>
+            <span>{showTranscriptPanel ? "Hide" : "Show"} Transcript</span>
+          </button>
+        </div>
       )}
 
       {/* Transcript Panel */}
