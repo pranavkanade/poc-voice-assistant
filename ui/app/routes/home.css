@@ -1,6 +1,7 @@
 .app-container {
     display: flex;
-    height: 100vh;
+    flex-direction: column;
+    min-height: 100vh;
     font-family:
         -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
     background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
@@ -13,7 +14,7 @@
     align-items: center;
     justify-content: center;
     padding: 3rem;
-    min-height: 0;
+    min-height: calc(100vh - 5rem);
     transition: margin-right 0.3s ease-in-out;
 }
 
@@ -25,18 +26,7 @@
     gap: 2.5rem;
 }
 
-.header {
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.app-title {
-    font-size: 2.5rem;
-    font-weight: 300;
-    margin: 0 0 0.5rem 0;
-    color: #1e293b;
-    letter-spacing: -0.025em;
-}
+/* Header styles moved to Navbar component */
 
 .app-subtitle {
     font-size: 1rem;
@@ -377,58 +367,6 @@
     display: flex;
     gap: 0.75rem;
     z-index: 50;
-}
-
-.transcript-control {
-    position: fixed;
-    bottom: 2rem;
-    left: 2rem;
-    display: flex;
-    gap: 0.75rem;
-    z-index: 50;
-}
-
-.control-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.9);
-    color: #6b7280;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-    backdrop-filter: blur(8px);
-    box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.control-button:hover {
-    background: rgba(255, 255, 255, 0.95);
-    color: #374151;
-    border-color: #d1d5db;
-    transform: translateY(-1px);
-    box-shadow:
-        0 8px 12px -1px rgba(0, 0, 0, 0.15),
-        0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.control-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.control-button:disabled:hover {
-    transform: none;
-    background: rgba(255, 255, 255, 0.9);
-    color: #6b7280;
-    border-color: #e5e7eb;
 }
 
 .prd-generate-button {
@@ -898,13 +836,60 @@
 }
 
 /* Responsive design */
+/* Starting Interface Styles */
+.starting-interface {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    text-align: center;
+    padding: 2rem;
+}
+
+.main-heading {
+    font-size: 3rem;
+    font-weight: 400;
+    color: #2c3e50;
+    margin-bottom: 3rem;
+    line-height: 1.2;
+    max-width: 600px;
+}
+
+.start-conversation-button {
+    background: transparent;
+    border: 2px solid #2c3e50;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 180px;
+    justify-content: center;
+}
+
+.start-conversation-button:hover:not(:disabled) {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.start-conversation-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 @media (max-width: 1024px) {
     .transcript-panel {
-        width: 350px;
+        width: 35vw;
     }
 
     .prd-panel {
-        width: 45vw;
+        width: 40vw;
     }
 }
 
@@ -956,24 +941,10 @@
         padding: 1.5rem;
     }
 
-    .app-title {
-        font-size: 2rem;
-    }
-
     .control-buttons {
         bottom: 1rem;
         right: 1rem;
         flex-direction: column;
         gap: 0.5rem;
-    }
-
-    .transcript-control {
-        bottom: 1rem;
-        left: 1rem;
-    }
-
-    .control-button {
-        padding: 0.625rem 0.875rem;
-        font-size: 0.8rem;
     }
 }

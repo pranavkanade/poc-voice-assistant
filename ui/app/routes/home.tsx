@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Vapi from "@vapi-ai/web";
+import Navbar from "../components/Navbar";
 import "./home.css";
 
 const apiKey: string = "6a1cc0d7-d71f-4ef3-a9dc-74bb0f88e342";
@@ -124,13 +125,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
     };
   }, [apiKey]);
 
-  useEffect(() => {
-    if (transcript.length - 1 >= 2 && isSpeaking) {
-      submitPRD();
-    }
-  }, [transcript.length, isSpeaking]);
-
-  const submitPRD = async () => {
+  const submitPRD = useCallback(async () => {
+    let abortController: AbortController | null = null;
     try {
       // Cancel any ongoing PRD request
       if (abortControllerRef.current) {
@@ -140,7 +136,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
       }
 
       // Create new AbortController for this request
-      const abortController = new AbortController();
+      abortController = new AbortController();
       abortControllerRef.current = abortController;
 
       // Convert transcript to conversation string
@@ -188,11 +184,17 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
       }
     } finally {
       // Clean up abort controller reference if this was the current request
-      if (abortControllerRef.current === abortController) {
+      if (abortController && abortControllerRef.current === abortController) {
         abortControllerRef.current = null;
       }
     }
-  };
+  }, [transcript]);
+
+  useEffect(() => {
+    if (transcript.length - 1 >= 2 && isSpeaking) {
+      submitPRD();
+    }
+  }, [transcript.length, isSpeaking, submitPRD]);
 
   const startCall = () => {
     if (vapi) {
@@ -276,6 +278,11 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
 
   return (
     <div className="app-container">
+      <Navbar
+        showTranscriptPanel={showTranscriptPanel}
+        onToggleTranscript={toggleTranscriptPanel}
+        hasTranscript={transcript.length > 0}
+      />
       {/* Main Content Area */}
       <div
         className="main-content"
@@ -284,17 +291,10 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
             showPRD && (prdGenerating || generatedPRD)
               ? "calc(45vw + 2rem)"
               : "0",
+          paddingTop: "5rem", // Account for fixed navbar
         }}
       >
         <div className="content-wrapper">
-          {/* Header */}
-          <div className="header">
-            <h1 className="app-title">Voice Assistant</h1>
-            <p className="app-subtitle">
-              Your conversation with the AI assistant
-            </p>
-          </div>
-
           {/* Conversation Display */}
           <div className="conversation-display">
             {hasAssistantSpoken && lastTwoMessages.length > 0 ? (
@@ -372,8 +372,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
               </div>
             ) : (
               <div className="empty-conversation">
-                <div className="empty-icon">🎤</div>
-                <p className="empty-text">Start your conversation</p>
+                <h2 className="main-heading">What Do You Want To Build?</h2>
                 <p className="empty-subtext">
                   Your conversation will appear here once you begin speaking
                 </p>
@@ -532,31 +531,6 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
               }
             })()}
           </div>
-        </div>
-      )}
-
-      {/* Transcript Button - Bottom Left */}
-      {transcript.length > 0 && (
-        <div className="transcript-control">
-          <button
-            onClick={toggleTranscriptPanel}
-            className="control-button transcript-button"
-            title={showTranscriptPanel ? "Hide Transcript" : "Show Transcript"}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"
-                fill="currentColor"
-              />
-            </svg>
-            <span>{showTranscriptPanel ? "Hide" : "Show"} Transcript</span>
-          </button>
         </div>
       )}
 
