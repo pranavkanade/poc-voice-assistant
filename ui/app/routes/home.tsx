@@ -136,6 +136,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
       }
 
       setPrdGenerating(true);
+      setShowPRD(true);
       const formData = new FormData();
       formData.append("conversation", conversation);
 
@@ -226,7 +227,15 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   return (
     <div className="app-container">
       {/* Main Content Area */}
-      <div className="main-content">
+      <div
+        className="main-content"
+        style={{
+          marginRight:
+            showPRD && (prdGenerating || generatedPRD)
+              ? "min(650px, 40vw)"
+              : "0",
+        }}
+      >
         <div className="content-wrapper">
           {/* Header */}
           <div className="header">
@@ -322,14 +331,6 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
             )}
           </div>
 
-          {/* PRD Generation Status */}
-          {prdGenerating && (
-            <div className="prd-status">
-              <div className="loading-spinner"></div>
-              <span>Generating PRD...</span>
-            </div>
-          )}
-
           {/* Voice Control */}
           <div className="voice-control">
             {!isConnected ? (
@@ -408,32 +409,24 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
               </div>
             )}
           </div>
-
-          {/* PRD Display Button */}
-          {generatedPRD && (
-            <div className="prd-control">
-              <button
-                onClick={() => setShowPRD(!showPRD)}
-                className="prd-button"
-              >
-                {showPRD ? "Hide PRD" : "View Generated PRD"}
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
       {/* PRD Panel */}
-      {showPRD && generatedPRD && (
-        <div className="prd-panel">
+      {showPRD && (prdGenerating || generatedPRD) && (
+        <div className="prd-panel" style={{ left: "auto", right: "2rem" }}>
           <div className="prd-header">
             <h3 className="prd-title">Product Requirements Document</h3>
-            <button onClick={() => setShowPRD(false)} className="close-button">
-              ×
-            </button>
           </div>
           <div className="prd-content">
-            <pre className="prd-text">{generatedPRD}</pre>
+            {prdGenerating ? (
+              <div className="prd-loading">
+                <div className="loading-spinner"></div>
+                <span>Generating PRD...</span>
+              </div>
+            ) : (
+              <pre className="prd-text">{generatedPRD}</pre>
+            )}
           </div>
         </div>
       )}
@@ -467,6 +460,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
       {showTranscriptPanel && (
         <div
           className={`transcript-panel ${showTranscriptPanel ? "transcript-panel-open" : ""}`}
+          style={{ left: "2rem", right: "auto" }}
         >
           <div className="transcript-header">
             <h3 className="transcript-title">Transcript</h3>

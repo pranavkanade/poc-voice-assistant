@@ -10,7 +10,7 @@ export async function getPRD(conversation: string) {
       {
         role: "system",
         content:
-          "You are a product manager who creates concise and crisp Product Requirements Documents (PRDs) based on user conversations. Analyze the conversation and create a concise PRD that includes: 1) Summary, 2) Objectives, 3) Functional Requirements, 4) Technical Requirements",
+          "You are a product manager who creates concise and crisp Product Requirements Documents (PRDs) based on user conversations. Analyze the conversation and create a concise PRD in **Markdown** format with **less than 200 words** that includes: 1) Summary, 2) Objectives, 3) Functional Requirements, 4) Technical Requirements",
       },
       {
         role: "user",
@@ -20,7 +20,6 @@ export async function getPRD(conversation: string) {
     max_tokens: 2000,
     temperature: 0.7,
   });
-  console.log(response);
   return response.choices[0].message.content;
 }
 

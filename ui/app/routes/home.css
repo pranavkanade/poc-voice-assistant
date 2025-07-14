@@ -14,6 +14,7 @@
     justify-content: center;
     padding: 3rem;
     min-height: 0;
+    transition: margin-right 0.3s ease-in-out;
 }
 
 .content-wrapper {
@@ -436,7 +437,7 @@
 .transcript-panel {
     position: fixed;
     top: 2rem;
-    right: 2rem;
+    left: 2rem;
     bottom: 2rem;
     width: 400px;
     background: #ffffff;
@@ -446,7 +447,7 @@
         0 10px 10px -5px rgba(0, 0, 0, 0.04);
     display: flex;
     flex-direction: column;
-    transform: translateX(calc(100% + 2rem));
+    transform: translateX(calc(-100% - 2rem));
     transition: transform 0.3s ease-in-out;
     z-index: 40;
     overflow: hidden;
@@ -648,51 +649,11 @@
 }
 
 /* PRD Styles */
-.prd-status {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 1rem;
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 12px;
-    color: #1e40af;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin: 1rem 0;
-}
-
-.prd-control {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-}
-
-.prd-button {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-    box-shadow: 0 2px 4px 0 rgba(16, 185, 129, 0.2);
-}
-
-.prd-button:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px 0 rgba(16, 185, 129, 0.3);
-}
 
 .prd-panel {
     position: fixed;
     top: 2rem;
-    left: 2rem;
+    right: 2rem;
     bottom: 2rem;
     width: 600px;
     background: #ffffff;
@@ -769,6 +730,40 @@
     border: 1px solid #e2e8f0;
 }
 
+.prd-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 1.5rem;
+    color: #3b82f6;
+    font-size: 1rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 12px;
+    margin: 1rem;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.prd-loading .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(59, 130, 246, 0.2);
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.2);
+}
+
+.prd-loading span {
+    color: #1e40af;
+    letter-spacing: 0.025em;
+}
+
 /* Scrollbar styling */
 .transcript-content::-webkit-scrollbar {
     width: 6px;
@@ -822,10 +817,10 @@
 
     .transcript-panel {
         left: 1rem;
-        right: 1rem;
+        right: auto;
         bottom: 1rem;
         top: auto;
-        width: auto;
+        width: calc(100vw - 2rem);
         height: 60vh;
         border-radius: 16px 16px 0 0;
         transform: translateY(calc(100% + 1rem));
@@ -836,13 +831,17 @@
     }
 
     .prd-panel {
-        left: 1rem;
         right: 1rem;
+        left: 1rem;
         top: 1rem;
         bottom: 20vh;
         width: auto;
         height: auto;
         border-radius: 16px;
+    }
+
+    .main-content {
+        margin-right: 0 !important;
     }
 
     .prd-content {
