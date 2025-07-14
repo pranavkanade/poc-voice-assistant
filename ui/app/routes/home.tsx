@@ -7,7 +7,6 @@ import PRDPanel from "../components/PRDPanel";
 import PreviewPanel from "../components/PreviewPanel";
 import { useVapi } from "../hooks/useVapi";
 import { usePRD } from "../hooks/usePRD";
-import "./home.css";
 
 interface VapiWidgetProps {
   config?: Record<string, unknown>;
@@ -74,83 +73,68 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   };
 
   return (
-    <div className="app-container">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-950 dark:via-blue-950/30 dark:to-purple-950/20">
+      {/* Navbar */}
       <Navbar
         showTranscriptPanel={showTranscriptPanel}
         onToggleTranscript={toggleTranscriptPanel}
         hasTranscript={transcript.length > 0}
       />
-      {!showPreview ? (
-        <div
-          className="main-content"
-          style={{
-            marginLeft: (() => {
-              const hasPRD = showPRD && (prdGenerating || generatedPRD);
-              const hasTranscript = showTranscriptPanel;
-
-              if (hasPRD && hasTranscript) {
-                return "calc(400px + 45vw + 4rem)";
-              } else if (hasPRD) {
-                return "calc(45vw + 2rem)";
-              } else if (hasTranscript) {
-                return "calc(400px + 2rem)";
-              }
-              return "0";
-            })(),
-            marginRight: (() => {
-              const hasPreview =
-                showPreview && (generatingPreview || generatedPreview);
-              return hasPreview ? "calc(45vw + 2rem)" : "0";
-            })(),
-            paddingTop: "5rem",
-          }}
-        >
-          <div className="content-wrapper">
-            <ConversationDisplay
-              transcript={transcript}
-              editingUserMessage={editingUserMessage}
-              editedText={editedText}
-              onEditTextChange={setEditedText}
-              onStartEditing={startEditing}
-              onSaveEdit={handleEditSave}
-              onCancelEdit={handleEditCancel}
-            />
-
-            <VoiceControl
-              isConnected={isConnected}
-              isLoading={isLoading}
-              isSpeaking={isSpeaking}
-              onStartCall={startCall}
-              onEndCall={endCall}
-            />
-          </div>
-        </div>
-      ) : (
+      <div className="flex p-4 pt-20 min-h-lvh gap-4">
+        <TranscriptPanel
+          showTranscriptPanel={showTranscriptPanel}
+          transcript={transcript}
+          onClearTranscript={handleClearTranscript}
+        />
+        <PRDPanel
+          showPRD={showPRD}
+          showTranscriptPanel={showTranscriptPanel}
+          showPreview={showPreview}
+          prdGenerating={prdGenerating}
+          generatedPRD={generatedPRD}
+          editingPRD={editingPRD}
+          editedPRDText={editedPRDText}
+          onEditPRDText={handleEditPRDText}
+          onStartEditingPRD={startEditingPRD}
+          onSavePRDEdit={savePRDEdit}
+          onCancelPRDEdit={cancelPRDEdit}
+        />
         <PreviewPanel
           showPreview={showPreview}
           generatingPreview={generatingPreview}
           generatedPreview={generatedPreview}
+          showPRD={!!(showPRD && (prdGenerating || generatedPRD))}
         />
-      )}
+        {!showPreview && (
+          <main className="flex items-center justify-center transition-all duration-300 flex-3/5">
+            <div className="w-full max-w-4xl mx-auto space-y-8">
+              {/* Conversation Display */}
+              <div className="flex justify-center">
+                <ConversationDisplay
+                  transcript={transcript}
+                  editingUserMessage={editingUserMessage}
+                  editedText={editedText}
+                  onEditTextChange={setEditedText}
+                  onStartEditing={startEditing}
+                  onSaveEdit={handleEditSave}
+                  onCancelEdit={handleEditCancel}
+                />
+              </div>
 
-      <PRDPanel
-        showPRD={showPRD}
-        showTranscriptPanel={showTranscriptPanel}
-        prdGenerating={prdGenerating}
-        generatedPRD={generatedPRD}
-        editingPRD={editingPRD}
-        editedPRDText={editedPRDText}
-        onEditPRDText={handleEditPRDText}
-        onStartEditingPRD={startEditingPRD}
-        onSavePRDEdit={savePRDEdit}
-        onCancelPRDEdit={cancelPRDEdit}
-      />
-
-      <TranscriptPanel
-        showTranscriptPanel={showTranscriptPanel}
-        transcript={transcript}
-        onClearTranscript={handleClearTranscript}
-      />
+              {/* Voice Control */}
+              <div className="flex justify-center">
+                <VoiceControl
+                  isConnected={isConnected}
+                  isLoading={isLoading}
+                  isSpeaking={isSpeaking}
+                  onStartCall={startCall}
+                  onEndCall={endCall}
+                />
+              </div>
+            </div>
+          </main>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,10 @@
 import React from "react";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
+import { Card } from "./ui/card";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Edit3, Save, X, User, Bot } from "lucide-react";
+import { cn } from "../lib/utils";
 
 interface MessageBubbleProps {
   message: {
@@ -24,70 +30,142 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   onSaveEdit,
   onCancelEdit,
 }) => {
-  return (
-    <div className={`message-bubble ${message.role}`}>
-      <div className="message-header">
-        <span className="speaker-name">
-          {message.role === "user" ? "You" : "Assistant"}
-        </span>
-        {message.role === "user" && !isEditing && (
-          <button
-            onClick={onStartEditing}
-            className="edit-icon"
-            title="Edit message"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-                fill="currentColor"
-              />
-            </svg>
-          </button>
-        )}
-      </div>
+  const isUser = message.role === "user";
 
-      {message.role === "user" && isEditing ? (
-        <div className="edit-container">
-          <textarea
-            value={editedText}
-            onChange={(e) => onEditTextChange(e.target.value)}
-            className="edit-input"
-            autoFocus
-          />
-          <div className="edit-buttons">
-            <button onClick={onSaveEdit} className="btn-save">
-              Save
-            </button>
-            <button onClick={onCancelEdit} className="btn-cancel">
-              Cancel
-            </button>
+  return (
+    <div
+      className={cn("flex w-full", isUser ? "justify-end" : "justify-start")}
+    >
+      <div
+        className={cn("flex gap-3 max-w-[85%]", isUser && "flex-row-reverse")}
+      >
+        {/* Avatar */}
+        <Avatar className="h-10 w-10 shrink-0">
+          <AvatarFallback
+            className={cn(
+              "text-sm font-medium",
+              isUser ? "bg-blue-600 text-white" : "bg-emerald-600 text-white",
+            )}
+          >
+            {isUser ? (
+              <User className="h-5 w-5" />
+            ) : (
+              <Bot className="h-5 w-5" />
+            )}
+          </AvatarFallback>
+        </Avatar>
+
+        {/* Message Content */}
+        <div className="flex flex-col gap-2 min-w-0">
+          {/* Speaker Name and Edit Button */}
+          <div
+            className={cn(
+              "flex items-center gap-2",
+              isUser && "flex-row-reverse",
+            )}
+          >
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              {isUser ? "You" : "Assistant"}
+            </span>
+            {isUser && !isEditing && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onStartEditing}
+                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-muted"
+              >
+                <Edit3 className="h-3 w-3" />
+              </Button>
+            )}
           </div>
-        </div>
-      ) : (
-        <div className="message-content">
-          {message.text}
-          {message.currentPartial && (
-            <>
-              {message.text && " "}
-              <span className="partial-text">
-                {message.currentPartial}
-              </span>
-              <span className="speaking-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
-            </>
+
+          {/* Message Bubble */}
+          {isUser && isEditing ? (
+            <Card className="p-4 shadow-md border-blue-200 bg-blue-50/50 dark:bg-blue-950/20 dark:border-blue-800">
+              <div className="space-y-3">
+                <Textarea
+                  value={editedText}
+                  onChange={(e) => onEditTextChange(e.target.value)}
+                  className="min-h-[80px] resize-none border-0 bg-white dark:bg-background focus-visible:ring-1 focus-visible:ring-blue-500"
+                  placeholder="Edit your message..."
+                  autoFocus
+                />
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    onClick={onSaveEdit}
+                    size="sm"
+                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-md"
+                  >
+                    <Save className="h-3 w-3 mr-1" />
+                    Save
+                  </Button>
+                  <Button
+                    onClick={onCancelEdit}
+                    variant="outline"
+                    size="sm"
+                    className="shadow-sm"
+                  >
+                    <X className="h-3 w-3 mr-1" />
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ) : (
+            <div className="group">
+              <Card
+                className={cn(
+                  "p-4 shadow-md transition-all duration-200 hover:shadow-lg",
+                  isUser
+                    ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white border-0"
+                    : "bg-card text-card-foreground border border-border hover:border-border/80",
+                )}
+              >
+                <div className="text-lg leading-relaxed whitespace-pre-wrap break-words">
+                  {message.text}
+                  {message.currentPartial && (
+                    <>
+                      {message.text && " "}
+                      <span
+                        className={cn(
+                          "italic",
+                          isUser ? "text-blue-100" : "text-muted-foreground",
+                        )}
+                      >
+                        {message.currentPartial}
+                      </span>
+                      <SpeakingIndicator isUser={isUser} />
+                    </>
+                  )}
+                </div>
+              </Card>
+            </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
+
+// Speaking indicator component
+const SpeakingIndicator: React.FC<{ isUser: boolean }> = ({ isUser }) => (
+  <span className="inline-flex items-center ml-2">
+    <span className="flex space-x-1">
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className={cn(
+            "w-1 h-1 rounded-full animate-pulse",
+            isUser ? "bg-blue-200" : "bg-muted-foreground",
+          )}
+          style={{
+            animationDelay: `${i * 0.2}s`,
+            animationDuration: "1.4s",
+          }}
+        />
+      ))}
+    </span>
+  </span>
+);
 
 export default MessageBubble;

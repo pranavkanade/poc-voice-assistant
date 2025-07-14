@@ -1,4 +1,7 @@
 import React from "react";
+import { Button } from "./ui/button";
+import { Mic, MicOff, Loader2 } from "lucide-react";
+import { cn } from "../lib/utils";
 
 interface VoiceControlProps {
   isConnected: boolean;
@@ -16,80 +19,71 @@ const VoiceControl: React.FC<VoiceControlProps> = ({
   onEndCall,
 }) => {
   return (
-    <div className="voice-control">
+    <div className="flex flex-col items-center justify-center space-y-6">
       {!isConnected ? (
-        <button
+        <Button
           onClick={onStartCall}
-          className="mic-button"
           disabled={isLoading}
+          size="lg"
+          className="bg-blue-600 hover:bg-blue-700 text-white border-0 transition-all duration-200 h-14 text-xl"
         >
           {isLoading ? (
-            <>
-              <div className="loading-spinner"></div>
-              <span>Connecting...</span>
-            </>
-          ) : (
-            <>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M19 11C19 15.4183 15.4183 19 11 19V17C14.3137 17 17 14.3137 17 11H19Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M5 11C5 14.3137 7.68629 17 11 17V19C6.58172 19 3 15.4183 3 11H5Z"
-                  fill="currentColor"
-                />
-                <path d="M11 22H13V19H11V22Z" fill="currentColor" />
-              </svg>
-              <span>Start Conversation</span>
-            </>
-          )}
-        </button>
-      ) : (
-        <div className="call-active">
-          <div
-            className={`mic-indicator ${isSpeaking ? "speaking" : "listening"}`}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2Z"
-                fill="currentColor"
-              />
-              <path
-                d="M19 11C19 15.4183 15.4183 19 11 19V17C14.3137 17 17 14.3137 17 11H19Z"
-                fill="currentColor"
-              />
-              <path
-                d="M5 11C5 14.3137 7.68629 17 11 17V19C6.58172 19 3 15.4183 3 11H5Z"
-                fill="currentColor"
-              />
-              <path d="M11 22H13V19H11V22Z" fill="currentColor" />
-            </svg>
-          </div>
-          <div className="call-status">
-            <span className="status-text">
-              {isSpeaking ? "Assistant Speaking" : "Listening"}
+            <span className="flex items-center px-3">
+              <Loader2 className="mr-3 size-6 animate-spin" />
+              Connecting...
             </span>
-            <button onClick={onEndCall} className="end-call-button">
-              End Call
-            </button>
+          ) : (
+            <span className="flex items-center px-3">
+              <Mic className="mr-3 size-6" />
+              Start Conversation
+            </span>
+          )}
+        </Button>
+      ) : (
+        <div className="flex flex-col items-center space-y-6">
+          {/* Mic Indicator */}
+          <div
+            className={cn(
+              "relative flex h-20 w-20 items-center justify-center rounded-full border-4 transition-all duration-300",
+              isSpeaking
+                ? "border-purple-200 bg-purple-500 animate-pulse"
+                : "border-blue-200 bg-blue-500",
+            )}
+          >
+            <Mic className="h-8 w-8 text-white" />
+
+            {/* Pulsing ring animation */}
+            <div
+              className={cn(
+                "absolute inset-0 rounded-full border-4 animate-ping",
+                isSpeaking ? "border-purple-300" : "border-blue-300",
+              )}
+              style={{ animationDuration: "2s" }}
+            />
           </div>
+
+          {/* Status Text */}
+          <div className="text-center space-y-2">
+            <p className="text-lg font-medium text-foreground">
+              {isSpeaking ? "Assistant Speaking" : "Listening"}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {isSpeaking
+                ? "The assistant is responding to you"
+                : "Say something to continue the conversation"}
+            </p>
+          </div>
+
+          {/* End Call Button */}
+          <Button
+            onClick={onEndCall}
+            variant="outline"
+            size="sm"
+            className="gap-2 transition-all duration-200 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+          >
+            <MicOff className="h-4 w-4" />
+            End Call
+          </Button>
         </div>
       )}
     </div>

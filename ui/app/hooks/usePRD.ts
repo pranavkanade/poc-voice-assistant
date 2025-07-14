@@ -114,10 +114,10 @@ export const usePRD = (
   }, [generatedPRD]);
 
   useEffect(() => {
-    if (transcript.length - 1 >= 2 && isSpeaking) {
+    if (transcript.length - 1 >= 2 && isSpeaking && !prdGenerating) {
       submitPRD();
     }
-  }, [transcript.length, isSpeaking, submitPRD]);
+  }, [transcript.length, isSpeaking, submitPRD, prdGenerating]);
 
   useEffect(() => {
     if (!isConnected && !prdGenerating && !!generatedPRD) {
