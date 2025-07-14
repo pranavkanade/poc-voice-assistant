@@ -226,7 +226,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   useEffect(() => {
     if (!isConnected && !prdGenerating && !!generatedPRD) {
       console.log("Preview generation started!");
-      // generatePreview();
+      generatePreview();
     }
   }, [isConnected, prdGenerating, generatedPRD]);
 
