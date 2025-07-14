@@ -3,9 +3,16 @@ import { Button } from "./ui/button";
 import { Card, CardHeader, CardContent } from "./ui/card";
 import { Textarea } from "./ui/textarea";
 import { ScrollArea } from "./ui/scroll-area";
-import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
-import { FileText, Edit3, Save, X, Loader2, Sparkles } from "lucide-react";
+import {
+  FileText,
+  Edit3,
+  Save,
+  X,
+  Loader2,
+  Sparkles,
+  Check,
+} from "lucide-react";
 import { cn } from "../lib/utils";
 
 interface PRDPanelProps {
@@ -20,6 +27,8 @@ interface PRDPanelProps {
   onStartEditingPRD: () => void;
   onSavePRDEdit: () => void;
   onCancelPRDEdit: () => void;
+  onRegeneratePreview: () => void;
+  onResetApplication: () => void;
 }
 
 const PRDPanel: React.FC<PRDPanelProps> = ({
@@ -34,6 +43,8 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
   onStartEditingPRD,
   onSavePRDEdit,
   onCancelPRDEdit,
+  onRegeneratePreview,
+  onResetApplication,
 }) => {
   if (!showPRD || (!prdGenerating && !generatedPRD)) return null;
 
@@ -84,15 +95,17 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
                     </Button>
                   </>
                 ) : (
-                  <Button
-                    onClick={onStartEditingPRD}
-                    variant="outline"
-                    size="sm"
-                    className="gap-2 hover:bg-muted transition-colors"
-                  >
-                    <Edit3 className="h-3 w-3" />
-                    Edit
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      onClick={onStartEditingPRD}
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 hover:bg-muted transition-colors"
+                    >
+                      <Edit3 className="h-3 w-3" />
+                      Edit
+                    </Button>
+                  </div>
                 )}
               </div>
             )}
@@ -109,7 +122,28 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
               onEditText={onEditPRDText}
             />
           ) : (
-            <DisplayState prdContent={generatedPRD} />
+            <>
+              <DisplayState prdContent={generatedPRD} />
+              <div className="flex items-center justify-center gap-8">
+                <Button
+                  onClick={onRegeneratePreview}
+                  variant="outline"
+                  size="lg"
+                  className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-colors h-14 text-lg"
+                >
+                  <Sparkles className="size-6 mr-3" />
+                  Regenerate Preview
+                </Button>
+                <Button
+                  onClick={onResetApplication}
+                  size="lg"
+                  className="gap-2 bg-green-600 hover:bg-green-700 text-white shadow-md h-14 text-lg"
+                >
+                  <Check className="size-6 mr-3" />
+                  Looks Good!
+                </Button>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
@@ -174,9 +208,9 @@ interface DisplayStateProps {
 }
 
 const DisplayState: React.FC<DisplayStateProps> = ({ prdContent }) => (
-  <ScrollArea className="h-full">
+  <ScrollArea className="">
     <div className="p-6">
-      <Card className="bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-900 dark:to-blue-950/30 border border-slate-200 dark:border-slate-800 shadow-sm">
+      <Card className="shadow-none">
         <CardContent className="p-6">
           <div className="prose prose-sm max-w-none dark:prose-invert">
             <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-foreground bg-transparent border-0 p-0 m-0">

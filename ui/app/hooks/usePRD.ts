@@ -155,6 +155,29 @@ export const usePRD = (
     setEditedPRDText(text);
   };
 
+  const regeneratePreview = useCallback(() => {
+    if (generatedPRD) {
+      generatePreview();
+    }
+  }, [generatedPRD, generatePreview]);
+
+  const resetApplication = useCallback(() => {
+    setPrdGenerating(false);
+    setGeneratedPRD(null);
+    setShowPRD(false);
+    setEditingPRD(false);
+    setEditedPRDText("");
+    setGeneratingPreview(false);
+    setGeneratedPreview(null);
+    setShowPreview(false);
+
+    // Cancel any ongoing requests
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+  }, []);
+
   return {
     prdGenerating,
     generatedPRD,
@@ -168,5 +191,7 @@ export const usePRD = (
     savePRDEdit,
     cancelPRDEdit,
     handleEditPRDText,
+    regeneratePreview,
+    resetApplication,
   };
 };

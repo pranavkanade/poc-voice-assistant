@@ -86,6 +86,7 @@ export async function getPreview(prd: string) {
       - **Follow Design Consistency**: Consistent spacing, colors, and typography throughout
       - **Include Interactive Elements**: Show buttons, filters, and controls users would need
       - **Demonstrate Information Hierarchy**: Most important data is prominently featured
+      - **Modern looking**: It should look modern with vibrant colors and clean layout (Apple's designers should be impressed)
 
       ## Output Format
       Provide a detailed dashboard mockup, including specific positioning, colors, typography, and realistic sample data that aligns with the PRD requirements.
