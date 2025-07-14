@@ -419,8 +419,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
           height: 100vh;
           font-family:
             -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
-          background: #ffffff;
-          color: #1f2937;
+          background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+          color: #1e293b;
         }
 
         .main-content {
@@ -449,7 +449,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
           font-size: 2.5rem;
           font-weight: 300;
           margin: 0 0 0.5rem 0;
-          color: #111827;
+          color: #1e293b;
           letter-spacing: -0.025em;
         }
 
@@ -518,14 +518,15 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         }
 
         .message-content {
-          background: #f8fafc;
+          background: #ffffff;
           padding: 1rem 1.25rem;
           border-radius: 16px;
           font-size: 1rem;
           line-height: 1.6;
-          color: #111827;
+          color: #1e293b;
           max-width: 85%;
           word-wrap: break-word;
+          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
 
         .msg-container {
@@ -535,14 +536,14 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
 
 
         .message-bubble.user .message-content {
-          background: #111827;
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
           color: white;
           border-bottom-right-radius: 6px;
         }
 
         .message-bubble.assistant .message-content {
-          background: #f8fafc;
-          color: #111827;
+          background: #ffffff;
+          color: #1e293b;
           border-bottom-left-radius: 6px;
         }
 
@@ -555,14 +556,14 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
           background: white;
           border-radius: 16px;
           padding: 1rem;
-          // box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-          border: 1px solid #e5e7eb;
-          background: #f8fafc;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          border: 1px solid #e2e8f0;
+          background: #ffffff;
         }
 
         .edit-input {
           padding: 1rem 1.25rem;
-          border: none;
+          border: 1px solid #e2e8f0;
           border-radius: 12px;
           font-size: 1rem;
           line-height: 1.6;
@@ -571,14 +572,15 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
           font-family: inherit;
           outline: none;
           background: #f8fafc;
-          transition: background-color 0.2s ease;
+          transition: all 0.2s ease;
           width: 100%;
           box-sizing: border-box;
         }
 
         .edit-input:focus {
-          // background: white;
-          box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+          background: white;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .edit-buttons {
@@ -589,7 +591,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         }
 
         .btn-save {
-          background: #111827;
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
           color: white;
           border: none;
           border-radius: 6px;
@@ -602,9 +604,9 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         }
 
         .btn-save:hover {
-          background: #374151;
+          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
           transform: translateY(-1px);
-          box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 8px 0 rgba(59, 130, 246, 0.3);
         }
 
         .btn-cancel {
@@ -666,24 +668,28 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
           display: flex;
           align-items: center;
           gap: 0.75rem;
-          background: #111827;
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
           color: white;
           border: none;
-          border-radius: 8px;
+          border-radius: 12px;
           padding: 1rem 1.5rem;
           font-size: 1rem;
           font-weight: 500;
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: all 0.2s ease;
           font-family: inherit;
+          box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.2);
         }
 
         .mic-button:hover {
-          background: #374151;
+          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px 0 rgba(59, 130, 246, 0.3);
         }
 
         .mic-button:active {
-          background: #1f2937;
+          background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+          transform: translateY(0);
         }
 
         .mic-button:disabled {
@@ -731,8 +737,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         }
 
         .mic-indicator.speaking {
-          background: #ef4444;
-          border-color: #fee2e2;
+          background: #f59e0b;
+          border-color: #fef3c7;
           animation: pulse 1.5s ease-in-out infinite;
         }
 
@@ -780,33 +786,34 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
 
         .transcript-panel {
           width: 400px;
-          background: #f9fafb;
-          border-left: 1px solid #e5e7eb;
+          background: #f8fafc;
+          border-left: 1px solid #e2e8f0;
           display: flex;
           flex-direction: column;
         }
 
         .transcript-header {
           padding: 1.5rem;
-          border-bottom: 1px solid #e5e7eb;
+          border-bottom: 1px solid #e2e8f0;
           display: flex;
           justify-content: space-between;
           align-items: center;
           background: #ffffff;
+          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
         }
 
         .transcript-title {
           margin: 0;
           font-size: 1.125rem;
           font-weight: 600;
-          color: #111827;
+          color: #1e293b;
         }
 
         .clear-button {
           background: transparent;
-          color: #6b7280;
-          border: 1px solid #d1d5db;
-          border-radius: 4px;
+          color: #64748b;
+          border: 1px solid #cbd5e1;
+          border-radius: 6px;
           padding: 0.25rem 0.75rem;
           font-size: 0.875rem;
           font-weight: 500;
@@ -816,8 +823,9 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         }
 
         .clear-button:hover {
-          background: #f3f4f6;
-          color: #374151;
+          background: #f1f5f9;
+          color: #334155;
+          border-color: #94a3b8;
         }
 
         .transcript-content {
@@ -890,14 +898,14 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         }
 
         .user .message-text {
-          background: #111827;
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
           color: white;
         }
 
         .assistant .message-text {
-          background: #f3f4f6;
-          color: #111827;
-          border: 1px solid #e5e7eb;
+          background: #f8fafc;
+          color: #1e293b;
+          border: 1px solid #e2e8f0;
         }
 
         .message-meta {
@@ -983,12 +991,12 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         }
 
         .transcript-content::-webkit-scrollbar-thumb {
-          background: #d1d5db;
+          background: #cbd5e1;
           border-radius: 3px;
         }
 
         .transcript-content::-webkit-scrollbar-thumb:hover {
-          background: #9ca3af;
+          background: #94a3b8;
         }
 
         /* Responsive design */
