@@ -29,6 +29,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   const [prdGenerating, setPrdGenerating] = useState(false);
   const [generatedPRD, setGeneratedPRD] = useState<string | null>(null);
   const [showPRD, setShowPRD] = useState(false);
+  const [editingPRD, setEditingPRD] = useState(false);
+  const [editedPRDText, setEditedPRDText] = useState("");
 
   // Ref to store the current AbortController for PRD requests
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -256,6 +258,22 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
     setShowTranscriptPanel(!showTranscriptPanel);
   };
 
+  const startEditingPRD = () => {
+    setEditedPRDText(generatedPRD || "");
+    setEditingPRD(true);
+  };
+
+  const savePRDEdit = () => {
+    setGeneratedPRD(editedPRDText);
+    setEditingPRD(false);
+    setEditedPRDText("");
+  };
+
+  const cancelPRDEdit = () => {
+    setEditingPRD(false);
+    setEditedPRDText("");
+  };
+
   return (
     <div className="app-container">
       {/* Main Content Area */}
@@ -449,6 +467,39 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         <div className="prd-panel" style={{ left: "auto", right: "2rem" }}>
           <div className="prd-header">
             <h3 className="prd-title">Product Requirements Document</h3>
+            {!prdGenerating && generatedPRD && (
+              <div className="prd-header-buttons">
+                {editingPRD ? (
+                  <>
+                    <button onClick={savePRDEdit} className="prd-save-button">
+                      Save
+                    </button>
+                    <button
+                      onClick={cancelPRDEdit}
+                      className="prd-cancel-button"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <button onClick={startEditingPRD} className="prd-edit-button">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    Edit
+                  </button>
+                )}
+              </div>
+            )}
           </div>
           <div className="prd-content">
             {(() => {
@@ -457,15 +508,28 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
                 prdGenerating,
                 "generatedPRD:",
                 !!generatedPRD,
+                "editingPRD:",
+                editingPRD,
               );
-              return prdGenerating ? (
-                <div className="prd-loading">
-                  <div className="loading-spinner"></div>
-                  <span>Generating PRD...</span>
-                </div>
-              ) : (
-                <pre className="prd-text">{generatedPRD}</pre>
-              );
+              if (prdGenerating) {
+                return (
+                  <div className="prd-loading">
+                    <div className="loading-spinner"></div>
+                    <span>Generating PRD...</span>
+                  </div>
+                );
+              } else if (editingPRD) {
+                return (
+                  <textarea
+                    className="prd-edit-textarea"
+                    value={editedPRDText}
+                    onChange={(e) => setEditedPRDText(e.target.value)}
+                    placeholder="Edit your PRD content here (Markdown format)..."
+                  />
+                );
+              } else {
+                return <pre className="prd-text">{generatedPRD}</pre>;
+              }
             })()}
           </div>
         </div>
