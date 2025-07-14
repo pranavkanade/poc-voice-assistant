@@ -76,7 +76,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
                 currentPartial: undefined,
               };
             } else {
-              // Partial transcript - show as currently being typed
+              // Partial transcript - show as currently being spoken
               newTranscript[lastMessageIndex] = {
                 ...lastMessage,
                 isComplete: false,
@@ -263,17 +263,22 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
                 >
                   <div className="message-content">
                     <div className="message-text">
-                      {msg.text}
+                      {msg.text && <span>{msg.text}</span>}
                       {msg.currentPartial && (
                         <>
                           {msg.text && " "}
-                          {msg.currentPartial}
+                          <span className="partial-text">
+                            {msg.currentPartial}
+                          </span>
                           <span className="speaking-indicator">
                             <span></span>
                             <span></span>
                             <span></span>
                           </span>
                         </>
+                      )}
+                      {!msg.text && !msg.currentPartial && (
+                        <span className="empty-message">Starting...</span>
                       )}
                     </div>
                     <div className="message-meta">
@@ -685,6 +690,17 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         .partial-indicator {
           color: #10b981;
           font-size: 0.7rem;
+        }
+
+        .partial-text {
+          opacity: 0.8;
+          font-style: italic;
+        }
+
+        .empty-message {
+          opacity: 0.6;
+          font-style: italic;
+          color: #6b7280;
         }
 
         /* Scrollbar styling */
