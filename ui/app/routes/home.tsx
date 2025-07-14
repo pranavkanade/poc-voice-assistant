@@ -32,6 +32,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   const [showPRD, setShowPRD] = useState(false);
   const [editingPRD, setEditingPRD] = useState(false);
   const [editedPRDText, setEditedPRDText] = useState("");
+  const [generatingPreview, setGeneratingPreview] = useState(false);
+  const [generatedPreview, setGeneratedPreview] = useState<string | null>(null);
 
   // Ref to store the current AbortController for PRD requests
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -190,11 +192,43 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
     }
   }, [transcript]);
 
+  const generatePreview = useCallback(async () => {
+    try {
+      setGeneratingPreview(true);
+      const formData = new FormData();
+      formData.append("prd", generatedPRD as string);
+
+      const response = await fetch("/api/preview", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const previewData = await response.json();
+        console.log("Preview generated successfully:", previewData);
+        setGeneratedPreview(previewData);
+      } else {
+        console.error("Failed to generate preview:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error generating preview:", error);
+    } finally {
+      setGeneratingPreview(false);
+    }
+  }, [generatedPRD]);
+
   useEffect(() => {
     if (transcript.length - 1 >= 2 && isSpeaking) {
       submitPRD();
     }
   }, [transcript.length, isSpeaking, submitPRD]);
+
+  useEffect(() => {
+    if (!isConnected && !prdGenerating && !!generatedPRD) {
+      console.log("Preview generation started!");
+      // generatePreview();
+    }
+  }, [isConnected, prdGenerating, generatedPRD]);
 
   const startCall = () => {
     if (vapi) {

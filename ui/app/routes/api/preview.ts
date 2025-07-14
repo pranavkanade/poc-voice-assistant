@@ -8,6 +8,7 @@ export async function getPreview(prd: string) {
     model: "gpt-image-1",
     prompt: `Generate a Web app UI preview for an application described in the following PRD : ${prd}`,
   });
+  console.log(JSON.stringify(response));
   return response?.data?.[0].url;
 }
 
