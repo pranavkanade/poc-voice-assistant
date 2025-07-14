@@ -25,6 +25,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [editingUserMessage, setEditingUserMessage] = useState(false);
   const [editedText, setEditedText] = useState("");
+  const [showTranscriptPanel, setShowTranscriptPanel] = useState(false);
 
   useEffect(() => {
     const vapiInstance = new Vapi(apiKey);
@@ -167,6 +168,10 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
     if (vapi) {
       vapi.stop();
     }
+  };
+
+  const toggleTranscriptPanel = () => {
+    setShowTranscriptPanel(!showTranscriptPanel);
   };
 
   return (
@@ -349,69 +354,102 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         </div>
       </div>
 
-      {/* Transcript Panel */}
-      <div className="transcript-panel">
-        <div className="transcript-header">
-          <h3 className="transcript-title">Transcript</h3>
-          {transcript.length > 0 && (
-            <button onClick={() => setTranscript([])} className="clear-button">
-              Clear
-            </button>
-          )}
-        </div>
+      {/* Transcript Toggle Button */}
+      {transcript.length > 0 && (
+        <button
+          onClick={toggleTranscriptPanel}
+          className="transcript-toggle-button"
+          title={showTranscriptPanel ? "Hide Transcript" : "Show Transcript"}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"
+              fill="currentColor"
+            />
+          </svg>
+          <span>{showTranscriptPanel ? "Hide" : "Show"} Transcript</span>
+        </button>
+      )}
 
-        <div className="transcript-content">
-          {transcript.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">💬</div>
-              <p className="empty-text">Your conversation will appear here</p>
-              <p className="empty-subtext">
-                Start talking to see the transcript
-              </p>
-            </div>
-          ) : (
-            <div className="messages">
-              {transcript.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`message ${msg.role === "user" ? "user" : "assistant"} ${msg.currentPartial ? "partial" : ""}`}
-                >
-                  <div className="msg-container">
-                    <div className="message-text">
-                      {msg.text && <span>{msg.text}</span>}
-                      {msg.currentPartial && (
-                        <>
-                          {msg.text && " "}
-                          <span className="partial-text">
-                            {msg.currentPartial}
+      {/* Transcript Panel */}
+      {showTranscriptPanel && (
+        <div
+          className={`transcript-panel ${showTranscriptPanel ? "transcript-panel-open" : ""}`}
+        >
+          <div className="transcript-header">
+            <h3 className="transcript-title">Transcript</h3>
+            {transcript.length > 0 && (
+              <button
+                onClick={() => {
+                  setTranscript([]);
+                  setShowTranscriptPanel(false);
+                }}
+                className="clear-button"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          <div className="transcript-content">
+            {transcript.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-icon">💬</div>
+                <p className="empty-text">Your conversation will appear here</p>
+                <p className="empty-subtext">
+                  Start talking to see the transcript
+                </p>
+              </div>
+            ) : (
+              <div className="messages">
+                {transcript.map((msg, i) => (
+                  <div
+                    key={i}
+                    className={`message ${msg.role === "user" ? "user" : "assistant"} ${msg.currentPartial ? "partial" : ""}`}
+                  >
+                    <div className="msg-container">
+                      <div className="message-text">
+                        {msg.text && <span>{msg.text}</span>}
+                        {msg.currentPartial && (
+                          <>
+                            {msg.text && " "}
+                            <span className="partial-text">
+                              {msg.currentPartial}
+                            </span>
+                            <span className="speaking-indicator">
+                              <span></span>
+                              <span></span>
+                              <span></span>
+                            </span>
+                          </>
+                        )}
+                        {!msg.text && !msg.currentPartial && (
+                          <span className="empty-message">Starting...</span>
+                        )}
+                      </div>
+                      <div className="message-meta">
+                        {msg.role === "user" ? "You" : "Assistant"}
+                        {msg.currentPartial && (
+                          <span className="partial-indicator">
+                            {" "}
+                            • speaking...
                           </span>
-                          <span className="speaking-indicator">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                          </span>
-                        </>
-                      )}
-                      {!msg.text && !msg.currentPartial && (
-                        <span className="empty-message">Starting...</span>
-                      )}
-                    </div>
-                    <div className="message-meta">
-                      {msg.role === "user" ? "You" : "Assistant"}
-                      {msg.currentPartial && (
-                        <span className="partial-indicator">
-                          {" "}
-                          • speaking...
-                        </span>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
