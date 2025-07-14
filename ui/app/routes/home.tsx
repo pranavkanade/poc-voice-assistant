@@ -287,10 +287,19 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
       <div
         className="main-content"
         style={{
-          marginRight:
-            showPRD && (prdGenerating || generatedPRD)
-              ? "calc(45vw + 2rem)"
-              : "0",
+          marginLeft: (() => {
+            const hasPRD = showPRD && (prdGenerating || generatedPRD);
+            const hasTranscript = showTranscriptPanel;
+
+            if (hasPRD && hasTranscript) {
+              return "calc(400px + 45vw + 4rem)";
+            } else if (hasPRD) {
+              return "calc(45vw + 2rem)";
+            } else if (hasTranscript) {
+              return "calc(400px + 2rem)";
+            }
+            return "0";
+          })(),
           paddingTop: "5rem", // Account for fixed navbar
         }}
       >
@@ -463,7 +472,13 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
 
       {/* PRD Panel */}
       {showPRD && (prdGenerating || generatedPRD) && (
-        <div className="prd-panel" style={{ left: "auto", right: "2rem" }}>
+        <div
+          className="prd-panel"
+          style={{
+            left: showTranscriptPanel ? "calc(400px + 4rem)" : "2rem",
+            right: "auto",
+          }}
+        >
           <div className="prd-header">
             <h3 className="prd-title">Product Requirements Document</h3>
             {!prdGenerating && generatedPRD && (
