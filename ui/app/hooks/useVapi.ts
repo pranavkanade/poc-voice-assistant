@@ -130,6 +130,14 @@ export const useVapi = () => {
     setTranscript([]);
   };
 
+  function resetVapi() {
+    setTranscript([]);
+    setIsConnected(false);
+    setIsSpeaking(false);
+    setIsLoading(false);
+    setIsConnected(false);
+  }
+
   return {
     vapi,
     isConnected,
@@ -140,5 +148,6 @@ export const useVapi = () => {
     endCall,
     updateUserMessage,
     clearTranscript,
+    resetVapi,
   };
 };

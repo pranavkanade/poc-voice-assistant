@@ -22,6 +22,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
     endCall,
     updateUserMessage,
     clearTranscript,
+    resetVapi,
   } = useVapi();
 
   const {
@@ -74,6 +75,15 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
     setShowTranscriptPanel(false);
   };
 
+  const reset = () => {
+    setEditedText("");
+    setEditingUserMessage(false);
+    setShowTranscriptPanel(false);
+
+    resetApplication();
+    resetVapi();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-950 dark:via-blue-950/30 dark:to-purple-950/20">
       {/* Navbar */}
@@ -101,7 +111,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
           onSavePRDEdit={savePRDEdit}
           onCancelPRDEdit={cancelPRDEdit}
           onRegeneratePreview={regeneratePreview}
-          onResetApplication={resetApplication}
+          onResetApplication={reset}
         />
         <PreviewPanel
           showPreview={showPreview}
