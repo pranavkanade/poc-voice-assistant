@@ -21,8 +21,10 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
       currentPartial?: string;
     }>
   >([]);
-  const [instruction, setInstruction] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
+  const [editingUserMessage, setEditingUserMessage] = useState(false);
+  const [editedText, setEditedText] = useState("");
 
   useEffect(() => {
     const vapiInstance = new Vapi(apiKey);
@@ -110,15 +112,56 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   const startCall = () => {
     if (vapi) {
       setIsLoading(true);
-      if (instruction.trim()) {
-        vapi.start(assistantId, {
-          firstMessage: instruction,
-        });
-      } else {
-        vapi.start(assistantId);
-      }
+      vapi.start(assistantId);
     }
   };
+
+  const updateUserMessage = (newText: string) => {
+    setTranscript((prev) => {
+      const newTranscript = [...prev];
+      const userMessages = newTranscript.filter((msg) => msg.role === "user");
+      if (userMessages.length > 0) {
+        const latestUserIndex = newTranscript.lastIndexOf(
+          userMessages[userMessages.length - 1],
+        );
+        newTranscript[latestUserIndex] = {
+          ...newTranscript[latestUserIndex],
+          text: newText,
+        };
+      }
+      return newTranscript;
+    });
+  };
+
+  const handleEditSave = () => {
+    updateUserMessage(editedText);
+    setEditingUserMessage(false);
+    setEditedText("");
+  };
+
+  const handleEditCancel = () => {
+    setEditingUserMessage(false);
+    setEditedText("");
+  };
+
+  const startEditing = () => {
+    const userMessages = transcript.filter((msg) => msg.role === "user");
+    if (userMessages.length > 0) {
+      const latestUserMessage = userMessages[userMessages.length - 1];
+      setEditedText(latestUserMessage.text);
+      setEditingUserMessage(true);
+    }
+  };
+
+  // Get last two messages for center display
+  const getLastTwoMessages = () => {
+    if (transcript.length === 0) return [];
+    if (transcript.length === 1) return [transcript[0]];
+    return transcript.slice(-2);
+  };
+
+  const lastTwoMessages = getLastTwoMessages();
+  const hasAssistantSpoken = transcript.some((msg) => msg.role === "assistant");
 
   const endCall = () => {
     if (vapi) {
@@ -135,22 +178,94 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
           <div className="header">
             <h1 className="app-title">Voice Assistant</h1>
             <p className="app-subtitle">
-              Add instructions and start a conversation with your AI assistant
+              Your conversation with the AI assistant
             </p>
           </div>
 
-          {/* Instruction Input */}
-          <div className="instruction-section">
-            <label className="instruction-label">Add Instruction</label>
-            <div className="input-wrapper">
-              <textarea
-                value={instruction}
-                onChange={(e) => setInstruction(e.target.value)}
-                placeholder="Enter your instruction here..."
-                className="instruction-input"
-                rows={4}
-              />
-            </div>
+          {/* Conversation Display */}
+          <div className="conversation-display">
+            {hasAssistantSpoken && lastTwoMessages.length > 0 ? (
+              <div className="message-bubbles">
+                {lastTwoMessages.map((msg, index) => (
+                  <div
+                    key={`center-${index}`}
+                    className={`message-bubble ${msg.role}`}
+                  >
+                    <div className="message-header">
+                      <span className="speaker-name">
+                        {msg.role === "user" ? "You" : "Assistant"}
+                      </span>
+                      {msg.role === "user" && !editingUserMessage && (
+                        <button
+                          onClick={startEditing}
+                          className="edit-icon"
+                          title="Edit message"
+                        >
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+
+                    {msg.role === "user" && editingUserMessage ? (
+                      <div className="edit-container">
+                        <textarea
+                          value={editedText}
+                          onChange={(e) => setEditedText(e.target.value)}
+                          className="edit-input"
+                          autoFocus
+                        />
+                        <div className="edit-buttons">
+                          <button onClick={handleEditSave} className="btn-save">
+                            Save
+                          </button>
+                          <button
+                            onClick={handleEditCancel}
+                            className="btn-cancel"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="message-content">
+                        {msg.text}
+                        {msg.currentPartial && (
+                          <>
+                            {msg.text && " "}
+                            <span className="partial-text">
+                              {msg.currentPartial}
+                            </span>
+                            <span className="speaking-indicator">
+                              <span></span>
+                              <span></span>
+                              <span></span>
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-conversation">
+                <div className="empty-icon">🎤</div>
+                <p className="empty-text">Start your conversation</p>
+                <p className="empty-subtext">
+                  Your conversation will appear here once you begin speaking
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Voice Control */}
@@ -261,7 +376,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
                   key={i}
                   className={`message ${msg.role === "user" ? "user" : "assistant"} ${msg.currentPartial ? "partial" : ""}`}
                 >
-                  <div className="message-content">
+                  <div className="msg-container">
                     <div className="message-text">
                       {msg.text && <span>{msg.text}</span>}
                       {msg.currentPartial && (
@@ -345,44 +460,199 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
           font-weight: 400;
         }
 
-        .instruction-section {
+        .conversation-display {
+          width: 100%;
           display: flex;
           flex-direction: column;
           gap: 1rem;
         }
 
-        .instruction-label {
-          color: #374151;
-          font-size: 1rem;
+        .message-bubbles {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+          max-width: 100%;
+        }
+
+        .message-bubble {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .message-bubble.user {
+          align-items: flex-end;
+        }
+
+        .message-bubble.assistant {
+          align-items: flex-start;
+        }
+
+        .message-header {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 0.25rem;
+        }
+
+        .speaker-name {
+          font-size: 0.8rem;
           font-weight: 500;
-          text-align: center;
+          color: #6b7280;
+          text-transform: uppercase;
+          letter-spacing: 0.025em;
         }
 
-        .input-wrapper {
-          position: relative;
-        }
-
-        .instruction-input {
-          width: 100%;
-          padding: 1rem;
-          border: 1px solid #d1d5db;
-          border-radius: 8px;
-          font-size: 1rem;
-          line-height: 1.5;
-          resize: vertical;
-          background: #ffffff;
-          outline: none;
-          transition: border-color 0.2s ease;
-          font-family: inherit;
-          min-height: 120px;
-        }
-
-        .instruction-input:focus {
-          border-color: #374151;
-        }
-
-        .instruction-input::placeholder {
+        .edit-icon {
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          padding: 0.25rem;
+          border-radius: 4px;
           color: #9ca3af;
+          transition: color 0.2s ease;
+        }
+
+        .edit-icon:hover {
+          color: #374151;
+        }
+
+        .message-content {
+          background: #f8fafc;
+          padding: 1rem 1.25rem;
+          border-radius: 16px;
+          font-size: 1rem;
+          line-height: 1.6;
+          color: #111827;
+          max-width: 85%;
+          word-wrap: break-word;
+        }
+
+        .msg-container {
+          max-width: 85%;
+          word-wrap: break-word;
+        }
+
+
+        .message-bubble.user .message-content {
+          background: #111827;
+          color: white;
+          border-bottom-right-radius: 6px;
+        }
+
+        .message-bubble.assistant .message-content {
+          background: #f8fafc;
+          color: #111827;
+          border-bottom-left-radius: 6px;
+        }
+
+        .edit-container {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+          width: 100%;
+          max-width: 600px;
+          background: white;
+          border-radius: 16px;
+          padding: 1rem;
+          // box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          border: 1px solid #e5e7eb;
+          background: #f8fafc;
+        }
+
+        .edit-input {
+          padding: 1rem 1.25rem;
+          border: none;
+          border-radius: 12px;
+          font-size: 1rem;
+          line-height: 1.6;
+          resize: vertical;
+          min-height: 120px;
+          font-family: inherit;
+          outline: none;
+          background: #f8fafc;
+          transition: background-color 0.2s ease;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .edit-input:focus {
+          // background: white;
+          box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+        }
+
+        .edit-buttons {
+          display: flex;
+          gap: 0.5rem;
+          justify-content: flex-end;
+          padding: 0;
+        }
+
+        .btn-save {
+          background: #111827;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          padding: 0.625rem 1.25rem;
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-save:hover {
+          background: #374151;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-cancel {
+          background: #f9fafb;
+          color: #6b7280;
+          border: 1px solid #d1d5db;
+          border-radius: 6px;
+          padding: 0.625rem 1.25rem;
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+          background: #f3f4f6;
+          color: #374151;
+          border-color: #9ca3af;
+          transform: translateY(-1px);
+        }
+
+        .empty-conversation {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          color: #6b7280;
+          padding: 3rem 1rem;
+        }
+
+        .empty-conversation .empty-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+          opacity: 0.6;
+        }
+
+        .empty-conversation .empty-text {
+          font-size: 1.1rem;
+          font-weight: 500;
+          margin: 0 0 0.5rem 0;
+          color: #374151;
+        }
+
+        .empty-conversation .empty-subtext {
+          font-size: 0.875rem;
+          margin: 0;
+          opacity: 0.8;
         }
 
         .voice-control {
