@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Vapi from "@vapi-ai/web";
 import "./home.css";
 
@@ -29,6 +29,9 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   const [prdGenerating, setPrdGenerating] = useState(false);
   const [generatedPRD, setGeneratedPRD] = useState<string | null>(null);
   const [showPRD, setShowPRD] = useState(false);
+
+  // Ref to store the current AbortController for PRD requests
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const vapiInstance = new Vapi(apiKey);
@@ -110,6 +113,11 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
     });
 
     return () => {
+      // Cancel any ongoing PRD request when component unmounts
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
       vapiInstance?.stop();
     };
   }, [apiKey]);
@@ -122,6 +130,17 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
 
   const submitPRD = async () => {
     try {
+      // Cancel any ongoing PRD request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        setPrdGenerating(false); // Reset loading state from cancelled request
+        console.log("Cancelled previous PRD request");
+      }
+
+      // Create new AbortController for this request
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
       // Convert transcript to conversation string
       const conversation = transcript
         .slice(0, transcript.length - 1)
@@ -135,6 +154,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         return;
       }
 
+      console.log("Starting PRD generation - setting loading to true");
       setPrdGenerating(true);
       setShowPRD(true);
       const formData = new FormData();
@@ -143,20 +163,32 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
       const response = await fetch("/api/prd", {
         method: "POST",
         body: formData,
+        signal: abortController.signal,
       });
 
       if (response.ok) {
         const prdData = await response.json();
         console.log("PRD generated successfully:", prdData);
+        console.log("Setting generated PRD and clearing loading state");
         setGeneratedPRD(prdData);
         setShowPRD(true);
+        setPrdGenerating(false); // Clear loading state on success
       } else {
         console.error("Failed to generate PRD:", response.statusText);
+        console.log("PRD generation failed - clearing loading state");
+        setPrdGenerating(false); // Clear loading state on error
       }
-    } catch (error) {
-      console.error("Error submitting PRD request:", error);
+    } catch (error: any) {
+      if (error?.name === "AbortError") {
+        console.log("PRD request was cancelled");
+      } else {
+        console.error("Error submitting PRD request:", error);
+      }
     } finally {
-      setPrdGenerating(false);
+      // Clean up abort controller reference if this was the current request
+      if (abortControllerRef.current === abortController) {
+        abortControllerRef.current = null;
+      }
     }
   };
 
@@ -232,7 +264,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         style={{
           marginRight:
             showPRD && (prdGenerating || generatedPRD)
-              ? "min(650px, 40vw)"
+              ? "calc(45vw + 2rem)"
               : "0",
         }}
       >
@@ -419,21 +451,29 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
             <h3 className="prd-title">Product Requirements Document</h3>
           </div>
           <div className="prd-content">
-            {prdGenerating ? (
-              <div className="prd-loading">
-                <div className="loading-spinner"></div>
-                <span>Generating PRD...</span>
-              </div>
-            ) : (
-              <pre className="prd-text">{generatedPRD}</pre>
-            )}
+            {(() => {
+              console.log(
+                "PRD Render - prdGenerating:",
+                prdGenerating,
+                "generatedPRD:",
+                !!generatedPRD,
+              );
+              return prdGenerating ? (
+                <div className="prd-loading">
+                  <div className="loading-spinner"></div>
+                  <span>Generating PRD...</span>
+                </div>
+              ) : (
+                <pre className="prd-text">{generatedPRD}</pre>
+              );
+            })()}
           </div>
         </div>
       )}
 
-      {/* Control Buttons */}
+      {/* Transcript Button - Bottom Left */}
       {transcript.length > 0 && (
-        <div className="control-buttons">
+        <div className="transcript-control">
           <button
             onClick={toggleTranscriptPanel}
             className="control-button transcript-button"

@@ -379,6 +379,15 @@
     z-index: 50;
 }
 
+.transcript-control {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    display: flex;
+    gap: 0.75rem;
+    z-index: 50;
+}
+
 .control-button {
     display: flex;
     align-items: center;
@@ -655,7 +664,7 @@
     top: 2rem;
     right: 2rem;
     bottom: 2rem;
-    width: 600px;
+    width: 45vw;
     background: #ffffff;
     border-radius: 16px;
     box-shadow:
@@ -806,7 +815,7 @@
     }
 
     .prd-panel {
-        width: 500px;
+        width: 45vw;
     }
 }
 
@@ -867,6 +876,11 @@
         right: 1rem;
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .transcript-control {
+        bottom: 1rem;
+        left: 1rem;
     }
 
     .control-button {
