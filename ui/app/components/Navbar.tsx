@@ -25,7 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-2">
               <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                Appsmith
+                Appbuilder
               </h1>
               <Badge variant="secondary" className="text-xs font-medium">
                 Voice Assistant
