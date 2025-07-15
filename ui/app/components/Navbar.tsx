@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({
     <nav className={`navbar ${className}`}>
       <div className="navbar-container">
         <div className="navbar-brand">
-          <h1 className="brand-title">Appsmith</h1>
+          <h1 className="brand-title">Appbuilder</h1>
           <span className="brand-subtitle">Voice Assistant</span>
         </div>
 
