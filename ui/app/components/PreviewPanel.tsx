@@ -10,6 +10,8 @@ import {
   Share,
   Heart,
 } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
+import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
 
@@ -31,8 +33,12 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   showPRD = false,
 }) => {
   return (
-    <div className={cn("transition-all duration-300 flex-1 h-1/2")}>
-      <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
+    <div
+      className={cn(
+        "transition-all duration-300 flex-1 h-[calc(50vh-8rem)] min-h-0",
+      )}
+    >
+      <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 min-h-0 gap-0">
         {/* Header */}
         <CardHeader className="flex-shrink-0 pb-4">
           <div className="flex items-center justify-between">
@@ -57,12 +63,14 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
         </CardHeader>
 
         {/* Content */}
-        <CardContent className="flex-1 overflow-hidden p-0 relative">
+        <CardContent className="flex-1 overflow-hidden p-0 relative min-h-0">
           {generatingPreview ? (
             <LoadingState />
           ) : generatedPreview ? (
             <PreviewDisplay preview={generatedPreview} />
-          ) : null}
+          ) : (
+            <SkeletonState />
+          )}
           <div className="flex items-center justify-center gap-4 absolute bottom-0 right-4 shadow-2xl z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <Button
               onClick={onRegeneratePreview}
@@ -91,7 +99,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
 };
 
 const LoadingState: React.FC = () => (
-  <div className="flex flex-col items-center justify-center h-full p-8 flex-3/5">
+  <div className="flex flex-col items-center justify-center h-full p-4 flex-3/5">
     <div className="relative mb-6">
       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl"></div>
       <Card className="relative bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-purple-200 dark:border-purple-800 p-8 shadow-lg">
@@ -120,9 +128,9 @@ interface PreviewDisplayProps {
 }
 
 const PreviewDisplay: React.FC<PreviewDisplayProps> = ({ preview }) => (
-  <div className="h-full p-6">
-    <div className="h-full flex flex-col space-y-4">
-      <div className="flex-1 relative">
+  <div className="h-full p-3 min-h-0">
+    <div className="h-full flex flex-col space-y-3 min-h-0">
+      <div className="flex-1 relative min-h-0">
         <Card className="h-full overflow-hidden border-2 border-dashed border-muted-foreground/20 bg-gradient-to-br from-slate-50 to-purple-50/30 dark:from-slate-900 dark:to-purple-950/30 shadow-lg">
           <CardContent className="p-0 h-full">
             <div className="relative h-full flex items-center justify-center">
@@ -130,12 +138,12 @@ const PreviewDisplay: React.FC<PreviewDisplayProps> = ({ preview }) => (
               <div className="absolute inset-0 bg-gradient-to-br from-transparent via-purple-50/50 to-pink-50/50 dark:from-transparent dark:via-purple-950/20 dark:to-pink-950/20"></div>
 
               {/* Preview Image */}
-              <div className="relative z-10 max-w-full max-h-full p-4">
+              <div className="relative z-10 max-w-full max-h-full p-2">
                 <div className="relative rounded-lg overflow-hidden shadow-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
                   <img
                     src={`data:image/png;base64,${preview}`}
                     alt="Application Preview"
-                    className="w-full h-auto max-h-[calc(100vh-300px)] object-contain"
+                    className="w-full h-auto max-h-[calc(40vh-100px)] object-contain"
                   />
 
                   {/* Overlay for better visibility */}
@@ -161,6 +169,30 @@ const PreviewDisplay: React.FC<PreviewDisplayProps> = ({ preview }) => (
         </span>
       </div>
     </div>
+  </div>
+);
+
+const SkeletonState: React.FC = () => (
+  <div className="h-full p-3 min-h-0">
+    <h3 className="text-base font-semibold mb-3">
+      Your preview will show up here...
+    </h3>
+    <Card className="border-2 border-dashed border-muted-foreground/20 min-h-0">
+      <CardContent className="flex p-3 min-h-0 gap-4">
+        <Skeleton className="h-64 w-32 rounded-lg" />
+        <div className="flex flex-col gap-4 flex-1">
+          <div className="flex gap-4">
+            <Skeleton className="h-14 w-full rounded-lg" />
+            <Skeleton className="h-14 w-full rounded-lg" />
+            <Skeleton className="h-14 w-full rounded-lg" />
+          </div>
+          <div className="flex gap-4">
+            <Skeleton className="h-32 w-full rounded-lg" />
+            <Skeleton className="h-32 w-full rounded-lg" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   </div>
 );
 

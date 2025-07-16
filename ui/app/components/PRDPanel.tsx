@@ -44,8 +44,12 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
   onCancelPRDEdit,
 }) => {
   return (
-    <div className={cn("transition-all duration-300 flex-1 h-1/2")}>
-      <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 gap-0">
+    <div
+      className={cn(
+        "transition-all duration-300 flex-1 h-[calc(50vh-8rem)] min-h-0",
+      )}
+    >
+      <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 gap-0 min-h-0">
         {/* Header */}
         <CardHeader className="flex-shrink-0 pb-4">
           <div className="flex items-center justify-between">
@@ -108,7 +112,7 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
         </CardHeader>
 
         {/* Content */}
-        <CardContent className="flex-1 overflow-hidden p-0">
+        <CardContent className="flex-1 overflow-hidden p-0 min-h-0">
           {prdGenerating ? (
             <LoadingState />
           ) : editingPRD ? (
@@ -128,7 +132,7 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
 };
 
 const LoadingState: React.FC = () => (
-  <div className="flex flex-col items-center justify-center h-full p-8">
+  <div className="flex flex-col items-center justify-center h-full p-4">
     <div className="relative mb-6">
       <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-2xl blur-xl"></div>
       <Card className="relative bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-emerald-950/20 dark:to-blue-950/20 border border-emerald-200 dark:border-emerald-800 p-8 shadow-lg">
@@ -161,17 +165,17 @@ const EditingState: React.FC<EditingStateProps> = ({
   editedText,
   onEditText,
 }) => (
-  <div className="h-full p-6">
-    <div className="h-full flex flex-col space-y-4">
+  <div className="h-full p-4">
+    <div className="h-full flex flex-col space-y-3">
       <div className="flex-1">
         <Textarea
           value={editedText}
           onChange={(e) => onEditText(e.target.value)}
           placeholder="Edit your PRD content here (Markdown format)..."
-          className="h-full resize-none border-2 border-dashed border-muted-foreground/20 focus:border-emerald-500 focus-visible:ring-emerald-500 text-sm leading-relaxed font-mono"
+          className="h-full resize-none border-2 border-dashed border-muted-foreground/20 focus:border-emerald-500 focus-visible:ring-emerald-500 text-sm leading-relaxed font-mono min-h-0"
         />
       </div>
-      <div className="text-xs text-muted-foreground bg-muted/50 rounded-md p-2">
+      <div className="text-xs text-muted-foreground bg-muted/50 rounded-md p-2 flex-shrink-0">
         <strong>Tip:</strong> You can use Markdown formatting for better
         structure
       </div>
@@ -184,42 +188,40 @@ interface DisplayStateProps {
 }
 
 const DisplayState: React.FC<DisplayStateProps> = ({ prdContent }) => (
-  <ScrollArea className="h-full">
-    <div className="p-6">
-      <Card className="shadow-none">
-        <CardContent className="p-6">
-          <div className="prose prose-sm max-w-none dark:prose-invert">
-            <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-foreground bg-transparent border-0 p-0 m-0">
-              {prdContent}
-            </pre>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  </ScrollArea>
+  <div className="h-full flex flex-col min-h-0">
+    <ScrollArea className="flex-1 min-h-0">
+      <div className="p-3">
+        <div className="prose prose-sm max-w-none dark:prose-invert">
+          <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-foreground bg-transparent border-0 p-0 m-0">
+            {prdContent}
+          </pre>
+        </div>
+      </div>
+    </ScrollArea>
+  </div>
 );
 
 const SkeletonState: React.FC = () => (
-  <ScrollArea className="h-full">
-    <div className="p-6">
-      <h3 className="text-lg font-semibold mb-1">
-        Your PRD will show up here...
-      </h3>
-      <Card className="shadow-none">
-        <CardContent className="p-6">
-          <div className="space-y-6">
+  <div className="h-full flex flex-col p-3 min-h-0">
+    <h3 className="text-base font-semibold mb-3 flex-shrink-0">
+      Your PRD will show up here...
+    </h3>
+    <div className="flex-1 min-h-0">
+      <Card className="shadow-none h-full">
+        <CardContent className="p-3 h-full">
+          <div className="space-y-3 h-full flex flex-col justify-start">
             {/* Title */}
-            <Skeleton className="h-6 w-1/2" />
+            <Skeleton className="h-6 w-1/2 flex-shrink-0" />
 
             {/* First section */}
-            <div className="space-y-2">
+            <div className="space-y-2 flex-shrink-0">
               <Skeleton className="h-4 w-1/4" />
               <Skeleton className="h-3 w-full" />
               <Skeleton className="h-3 w-3/4" />
             </div>
 
             {/* Second section */}
-            <div className="space-y-2">
+            <div className="space-y-2 flex-shrink-0">
               <Skeleton className="h-4 w-1/3" />
               <Skeleton className="h-3 w-5/6" />
               <Skeleton className="h-3 w-2/3" />
@@ -228,7 +230,7 @@ const SkeletonState: React.FC = () => (
         </CardContent>
       </Card>
     </div>
-  </ScrollArea>
+  </div>
 );
 
 export default PRDPanel;

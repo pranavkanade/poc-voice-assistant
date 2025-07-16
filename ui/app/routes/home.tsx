@@ -85,14 +85,14 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-950 dark:via-blue-950/30 dark:to-purple-950/20">
+    <div className="min-h-screen max-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-950 dark:via-blue-950/30 dark:to-purple-950/20">
       {/* Navbar */}
       <Navbar
         showTranscriptPanel={showTranscriptPanel}
         onToggleTranscript={toggleTranscriptPanel}
         hasTranscript={transcript.length > 0}
       />
-      <div className="flex p-4 pt-20 min-h-lvh gap-4">
+      <div className="flex p-4 pt-20 h-screen gap-4">
         <TranscriptPanel
           showTranscriptPanel={showTranscriptPanel}
           transcript={transcript}
