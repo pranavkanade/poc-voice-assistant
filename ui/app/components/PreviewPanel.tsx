@@ -24,6 +24,61 @@ interface PreviewPanelProps {
   onResetApplication: () => void;
 }
 
+const ProgressSection: React.FC = () => (
+  <div className="flex-1">
+    {/* Header with time estimation */}
+    <div className="flex items-center justify-between mb-1">
+      <div className="flex items-center gap-2">
+        <Loader2 className="h-4 w-4 text-purple-600 animate-spin" />
+        <h3 className="text-base font-semibold">
+          Building your application preview
+        </h3>
+      </div>
+      <div className="text-xs text-muted-foreground bg-purple-50 dark:bg-purple-950/20 px-2 py-1 rounded-full">
+        ⏱️ 30-60 seconds
+      </div>
+    </div>
+
+    {/* Progress bar */}
+    <div className="mb-2">
+      <div className="flex justify-between text-xs text-muted-foreground mb-1">
+        <span>Analyzing requirements...</span>
+        <span className="animate-pulse">◉</span>
+      </div>
+      <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+        <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-[progress_60s_ease-out_forwards] origin-left"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const Toolbar: React.FC<{
+  onRegeneratePreview: () => void;
+  onResetApplication: () => void;
+}> = ({ onRegeneratePreview, onResetApplication }) => (
+  <div className="flex items-center justify-center gap-4">
+    <Button
+      onClick={onRegeneratePreview}
+      variant="outline"
+      size="lg"
+      className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-colors"
+    >
+      <Sparkles className="size-4" />
+      Regenerate Preview
+    </Button>
+    <Button
+      // onClick={onResetApplication}
+      size="lg"
+      variant="secondary"
+      color="pink"
+      className="gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700 shadow-md"
+    >
+      <Heart className="size-5" />
+      Share
+    </Button>
+  </div>
+);
+
 const PreviewPanel: React.FC<PreviewPanelProps> = ({
   showPreview,
   generatingPreview,
@@ -40,8 +95,8 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
     >
       <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 min-h-0 gap-0">
         {/* Header */}
-        <CardHeader className="flex-shrink-0 pb-4">
-          <div className="flex items-center justify-between">
+        <CardHeader className="flex-shrink-0">
+          <div className="flex gap-8 items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg blur-md"></div>
@@ -49,6 +104,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
                   <Monitor className="h-5 w-5 text-white" />
                 </div>
               </div>
+
               <div>
                 <h3 className="text-lg font-semibold text-foreground">
                   Application Preview
@@ -59,39 +115,25 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
                 </Badge>
               </div>
             </div>
+            {generatingPreview && <ProgressSection />}
+            {!!generatedPreview && !generatingPreview && (
+              <Toolbar
+                onRegeneratePreview={onRegeneratePreview}
+                onResetApplication={onResetApplication}
+              />
+            )}
           </div>
         </CardHeader>
 
         {/* Content */}
         <CardContent className="flex-1 overflow-hidden p-0 relative min-h-0">
-          {!generatingPreview ? (
+          {generatingPreview ? (
             <LoadingState />
           ) : generatedPreview ? (
             <PreviewDisplay preview={generatedPreview} />
           ) : (
             <SkeletonState />
           )}
-          <div className="flex items-center justify-center gap-4 absolute bottom-0 right-4 shadow-2xl z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <Button
-              onClick={onRegeneratePreview}
-              variant="outline"
-              size="lg"
-              className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-colors"
-            >
-              <Sparkles className="size-4" />
-              Regenerate Preview
-            </Button>
-            <Button
-              // onClick={onResetApplication}
-              size="lg"
-              variant="secondary"
-              color="pink"
-              className="gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700 shadow-md"
-            >
-              <Heart className="size-5" />
-              Share
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>
@@ -100,34 +142,10 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
 
 const LoadingState: React.FC = () => (
   <div className="h-full p-3 min-h-0">
-    {/* Header with time estimation */}
-    <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center gap-2">
-        <Loader2 className="h-4 w-4 text-purple-600 animate-spin" />
-        <h3 className="text-base font-semibold">
-          Building your application preview
-        </h3>
-      </div>
-      <div className="text-xs text-muted-foreground bg-purple-50 dark:bg-purple-950/20 px-2 py-1 rounded-full">
-        ⏱️ 30-60 seconds
-      </div>
-    </div>
-
-    {/* Progress bar */}
-    <div className="mb-4">
-      <div className="flex justify-between text-xs text-muted-foreground mb-1">
-        <span>Analyzing requirements...</span>
-        <span className="animate-pulse">◉</span>
-      </div>
-      <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-        <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-[progress_20s_ease-out_infinite] origin-left"></div>
-      </div>
-    </div>
-
     <div className="h-full flex flex-col space-y-3 min-h-0">
       <div className="flex-1 relative min-h-0">
-        <Card className="h-full overflow-hidden border-2 border-dashed border-purple-300/30 dark:border-purple-600/30 bg-gradient-to-br from-slate-50 to-purple-50/30 dark:from-slate-900 dark:to-purple-950/30 shadow-lg">
-          <CardContent className="p-4 h-full">
+        <Card className="h-full p-0 overflow-hidden shadow-lg">
+          <CardContent className="h-full p-0">
             <div className="relative h-full flex items-center justify-center">
               {/* SaaS Dashboard Wireframe being built */}
               <div className="relative w-full h-full bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
@@ -157,59 +175,79 @@ const LoadingState: React.FC = () => (
                 </div>
 
                 {/* Main Content Area - KPI Cards */}
-                <div className="absolute top-18 left-26 right-3 h-16 bg-blue-100 dark:bg-blue-800 rounded animate-[fadeInSlide_1s_ease-out_2.5s_both]">
-                  <div className="grid grid-cols-3 gap-2 p-2 h-full">
-                    <div className="bg-blue-200 dark:bg-blue-700 rounded p-2">
-                      <div className="w-12 h-2 bg-blue-400 rounded animate-pulse"></div>
-                      <div className="w-8 h-3 bg-blue-300 rounded mt-2 animate-pulse delay-200"></div>
+                <div className="absolute top-18 left-26 right-3 bg-blue-100 dark:bg-blue-800 rounded animate-[fadeInSlide_1s_ease-out_2.5s_both]">
+                  <div className="grid grid-cols-3 gap-2 p-3">
+                    <div className="bg-blue-200 dark:bg-blue-700 rounded p-3">
+                      <div className="w-16 h-3 bg-blue-400 rounded animate-pulse"></div>
+                      <div className="w-10 h-4 bg-blue-300 rounded mt-3 animate-pulse delay-200"></div>
+                      <div className="w-12 h-2 bg-blue-200 rounded mt-2 animate-pulse delay-400"></div>
                     </div>
-                    <div className="bg-green-200 dark:bg-green-700 rounded p-2">
-                      <div className="w-12 h-2 bg-green-400 rounded animate-pulse delay-100"></div>
-                      <div className="w-8 h-3 bg-green-300 rounded mt-2 animate-pulse delay-300"></div>
+                    <div className="bg-green-200 dark:bg-green-700 rounded p-3">
+                      <div className="w-16 h-3 bg-green-400 rounded animate-pulse delay-100"></div>
+                      <div className="w-10 h-4 bg-green-300 rounded mt-3 animate-pulse delay-300"></div>
+                      <div className="w-12 h-2 bg-green-200 rounded mt-2 animate-pulse delay-500"></div>
                     </div>
-                    <div className="bg-yellow-200 dark:bg-yellow-700 rounded p-2">
-                      <div className="w-12 h-2 bg-yellow-400 rounded animate-pulse delay-200"></div>
-                      <div className="w-8 h-3 bg-yellow-300 rounded mt-2 animate-pulse delay-400"></div>
+                    <div className="bg-yellow-200 dark:bg-yellow-700 rounded p-3">
+                      <div className="w-16 h-3 bg-yellow-400 rounded animate-pulse delay-200"></div>
+                      <div className="w-10 h-4 bg-yellow-300 rounded mt-3 animate-pulse delay-400"></div>
+                      <div className="w-12 h-2 bg-yellow-200 rounded mt-2 animate-pulse delay-600"></div>
                     </div>
                   </div>
                 </div>
 
                 {/* Chart Area - appears fourth */}
-                <div className="absolute top-36 left-26 right-3 h-24 bg-green-100 dark:bg-green-800 rounded animate-[fadeInSlide_1s_ease-out_3.5s_both]">
-                  <div className="p-3">
-                    <div className="w-20 h-3 bg-green-300 dark:bg-green-600 rounded animate-pulse mb-2"></div>
-                    <div className="flex items-end space-x-2 h-16">
-                      <div className="w-2 h-8 bg-green-400 rounded animate-pulse delay-100"></div>
-                      <div className="w-2 h-12 bg-green-400 rounded animate-pulse delay-200"></div>
-                      <div className="w-2 h-6 bg-green-400 rounded animate-pulse delay-300"></div>
-                      <div className="w-2 h-14 bg-green-400 rounded animate-pulse delay-400"></div>
-                      <div className="w-2 h-10 bg-green-400 rounded animate-pulse delay-500"></div>
-                      <div className="w-2 h-13 bg-green-400 rounded animate-pulse delay-600"></div>
-                      <div className="w-2 h-7 bg-green-400 rounded animate-pulse delay-700"></div>
-                      <div className="w-2 h-11 bg-green-400 rounded animate-pulse delay-800"></div>
+                <div className="absolute top-40 left-26 right-3 bg-green-100 dark:bg-green-800 rounded animate-[fadeInSlide_1s_ease-out_3.5s_both]">
+                  <div className="p-4">
+                    <div className="w-24 h-4 bg-green-300 dark:bg-green-600 rounded animate-pulse mb-3"></div>
+                    <div className="flex items-end space-x-2 h-20 mb-2">
+                      <div className="w-3 h-10 bg-green-400 rounded animate-pulse delay-100"></div>
+                      <div className="w-3 h-16 bg-green-400 rounded animate-pulse delay-200"></div>
+                      <div className="w-3 h-8 bg-green-400 rounded animate-pulse delay-300"></div>
+                      <div className="w-3 h-18 bg-green-400 rounded animate-pulse delay-400"></div>
+                      <div className="w-3 h-12 bg-green-400 rounded animate-pulse delay-500"></div>
+                      <div className="w-3 h-15 bg-green-400 rounded animate-pulse delay-600"></div>
+                      <div className="w-3 h-9 bg-green-400 rounded animate-pulse delay-700"></div>
+                      <div className="w-3 h-14 bg-green-400 rounded animate-pulse delay-800"></div>
+                      <div className="w-3 h-11 bg-green-400 rounded animate-pulse delay-900"></div>
+                      <div className="w-3 h-17 bg-green-400 rounded animate-pulse delay-1000"></div>
                     </div>
                   </div>
                 </div>
 
                 {/* Data Table - appears fifth */}
-                <div className="absolute bottom-3 left-26 right-3 h-24 bg-purple-100 dark:bg-purple-800 rounded animate-[fadeInSlide_1s_ease-out_4.5s_both]">
-                  <div className="p-3 space-y-2">
-                    <div className="w-24 h-3 bg-purple-300 dark:bg-purple-600 rounded animate-pulse"></div>
-                    <div className="space-y-2">
-                      <div className="flex space-x-2">
-                        <div className="w-12 h-2 bg-purple-200 dark:bg-purple-700 rounded animate-pulse"></div>
-                        <div className="w-16 h-2 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-100"></div>
-                        <div className="w-8 h-2 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-200"></div>
+                <div className="absolute top-72 left-26 right-3 bg-purple-100 dark:bg-purple-800 rounded animate-[fadeInSlide_1s_ease-out_4.5s_both]">
+                  <div className="p-4 space-y-3">
+                    <div className="w-28 h-4 bg-purple-300 dark:bg-purple-600 rounded animate-pulse"></div>
+                    <div className="space-y-3">
+                      <div className="flex space-x-3">
+                        <div className="w-16 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse"></div>
+                        <div className="w-20 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-100"></div>
+                        <div className="w-12 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-200"></div>
+                        <div className="w-14 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-250"></div>
                       </div>
-                      <div className="flex space-x-2">
-                        <div className="w-12 h-2 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-300"></div>
-                        <div className="w-16 h-2 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-400"></div>
-                        <div className="w-8 h-2 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-500"></div>
+                      <div className="flex space-x-3">
+                        <div className="w-16 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-300"></div>
+                        <div className="w-20 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-400"></div>
+                        <div className="w-12 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-500"></div>
+                        <div className="w-14 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-550"></div>
                       </div>
-                      <div className="flex space-x-2">
-                        <div className="w-12 h-2 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-600"></div>
-                        <div className="w-16 h-2 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-700"></div>
-                        <div className="w-8 h-2 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-800"></div>
+                      <div className="flex space-x-3">
+                        <div className="w-16 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-600"></div>
+                        <div className="w-20 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-700"></div>
+                        <div className="w-12 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-800"></div>
+                        <div className="w-14 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-850"></div>
+                      </div>
+                      <div className="flex space-x-3">
+                        <div className="w-16 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-900"></div>
+                        <div className="w-20 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-1000"></div>
+                        <div className="w-12 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-1100"></div>
+                        <div className="w-14 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-1150"></div>
+                      </div>
+                      <div className="flex space-x-3">
+                        <div className="w-16 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-1200"></div>
+                        <div className="w-20 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-1300"></div>
+                        <div className="w-12 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-1400"></div>
+                        <div className="w-14 h-3 bg-purple-200 dark:bg-purple-700 rounded animate-pulse delay-1450"></div>
                       </div>
                     </div>
                   </div>
@@ -234,14 +272,6 @@ const LoadingState: React.FC = () => (
           </CardContent>
         </Card>
       </div>
-
-      {/* Status messages */}
-      <div className="flex items-center justify-center space-x-2 text-xs text-muted-foreground bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 rounded-md p-3">
-        <ImageIcon className="h-3 w-3 animate-pulse" />
-        <span className="animate-pulse">
-          Creating visual mockup from your conversation
-        </span>
-      </div>
     </div>
 
     <style jsx>{`
@@ -249,13 +279,19 @@ const LoadingState: React.FC = () => (
         0% {
           width: 0%;
         }
-        25% {
-          width: 25%;
+        16.67% {
+          width: 15%;
+        }
+        33.33% {
+          width: 30%;
         }
         50% {
-          width: 50%;
+          width: 45%;
         }
-        75% {
+        66.67% {
+          width: 60%;
+        }
+        83.33% {
           width: 75%;
         }
         100% {
@@ -297,7 +333,7 @@ const PreviewDisplay: React.FC<PreviewDisplayProps> = ({ preview }) => (
   <div className="h-full p-3 min-h-0">
     <div className="h-full flex flex-col space-y-3 min-h-0">
       <div className="flex-1 relative min-h-0">
-        <Card className="h-full overflow-hidden border-2 border-dashed border-muted-foreground/20 bg-gradient-to-br from-slate-50 to-purple-50/30 dark:from-slate-900 dark:to-purple-950/30 shadow-lg">
+        <Card className="h-full overflow-hidden p-0 border-none">
           <CardContent className="p-0 h-full">
             <div className="relative h-full flex items-center justify-center">
               {/* Background decoration */}
@@ -325,14 +361,6 @@ const PreviewDisplay: React.FC<PreviewDisplayProps> = ({ preview }) => (
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Footer info */}
-      <div className="flex items-center justify-center space-x-2 text-xs text-muted-foreground bg-muted/50 rounded-md p-3">
-        <ImageIcon className="h-3 w-3" />
-        <span>
-          This is a generated mockup based on your conversation and requirements
-        </span>
       </div>
     </div>
   </div>
