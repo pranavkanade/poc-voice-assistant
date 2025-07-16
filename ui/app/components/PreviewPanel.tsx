@@ -31,7 +31,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   showPRD = false,
 }) => {
   return (
-    <div className={cn("transition-all duration-300 flex-1/2")}>
+    <div className={cn("transition-all duration-300 flex-1 h-1/2")}>
       <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
         {/* Header */}
         <CardHeader className="flex-shrink-0 pb-4">

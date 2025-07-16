@@ -4,6 +4,7 @@ import { Card, CardHeader, CardContent } from "./ui/card";
 import { Textarea } from "./ui/textarea";
 import { ScrollArea } from "./ui/scroll-area";
 import { Badge } from "./ui/badge";
+import { Skeleton } from "./ui/skeleton";
 import {
   FileText,
   Edit3,
@@ -43,8 +44,8 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
   onCancelPRDEdit,
 }) => {
   return (
-    <div className={cn("transition-all duration-300 flex-1/2")}>
-      <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
+    <div className={cn("transition-all duration-300 flex-1 h-1/2")}>
+      <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 gap-0">
         {/* Header */}
         <CardHeader className="flex-shrink-0 pb-4">
           <div className="flex items-center justify-between">
@@ -115,10 +116,10 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
               editedText={editedPRDText}
               onEditText={onEditPRDText}
             />
+          ) : generatedPRD ? (
+            <DisplayState prdContent={generatedPRD} />
           ) : (
-            <>
-              <DisplayState prdContent={generatedPRD} />
-            </>
+            <SkeletonState />
           )}
         </CardContent>
       </Card>
@@ -183,7 +184,7 @@ interface DisplayStateProps {
 }
 
 const DisplayState: React.FC<DisplayStateProps> = ({ prdContent }) => (
-  <ScrollArea className="">
+  <ScrollArea className="h-full">
     <div className="p-6">
       <Card className="shadow-none">
         <CardContent className="p-6">
@@ -191,6 +192,38 @@ const DisplayState: React.FC<DisplayStateProps> = ({ prdContent }) => (
             <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-foreground bg-transparent border-0 p-0 m-0">
               {prdContent}
             </pre>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  </ScrollArea>
+);
+
+const SkeletonState: React.FC = () => (
+  <ScrollArea className="h-full">
+    <div className="p-6">
+      <h3 className="text-lg font-semibold mb-1">
+        Your PRD will show up here...
+      </h3>
+      <Card className="shadow-none">
+        <CardContent className="p-6">
+          <div className="space-y-6">
+            {/* Title */}
+            <Skeleton className="h-6 w-1/2" />
+
+            {/* First section */}
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-3/4" />
+            </div>
+
+            {/* Second section */}
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-1/3" />
+              <Skeleton className="h-3 w-5/6" />
+              <Skeleton className="h-3 w-2/3" />
+            </div>
           </div>
         </CardContent>
       </Card>
