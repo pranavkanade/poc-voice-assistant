@@ -412,26 +412,122 @@ const PreviewDisplay: React.FC<PreviewDisplayProps> = ({ preview }) => (
 );
 
 const SkeletonState: React.FC = () => (
-  <div className="h-full p-3 min-h-0">
-    <h3 className="text-base font-semibold mb-3">
-      Your preview will show up here...
-    </h3>
-    <Card className="border-2 border-dashed border-muted-foreground/20 min-h-0">
-      <CardContent className="flex p-3 min-h-0 gap-4">
-        <Skeleton className="h-64 w-32 rounded-lg" />
-        <div className="flex flex-col gap-4 flex-1">
-          <div className="flex gap-4">
-            <Skeleton className="h-14 w-full rounded-lg" />
-            <Skeleton className="h-14 w-full rounded-lg" />
-            <Skeleton className="h-14 w-full rounded-lg" />
-          </div>
-          <div className="flex gap-4">
-            <Skeleton className="h-32 w-full rounded-lg" />
-            <Skeleton className="h-32 w-full rounded-lg" />
-          </div>
+  <div className="h-full p-3 min-h-0 relative overflow-hidden">
+    {/* Animated background */}
+    {/* <div className="absolute inset-0 bg-gradient-to-br from-purple-50/40 via-pink-50/40 to-orange-50/40 dark:from-purple-950/20 dark:via-pink-950/20 dark:to-orange-950/20 animate-gradient-pulse"></div> */}
+
+    {/* Floating elements */}
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute top-1/4 right-1/4 w-3 h-3 bg-purple-400/20 rounded-full animate-ping"></div>
+      <div className="absolute bottom-1/3 left-1/4 w-2 h-2 bg-pink-400/30 rounded-full animate-pulse delay-300"></div>
+      <div className="absolute top-2/3 right-1/3 w-1.5 h-1.5 bg-orange-400/25 rounded-full animate-bounce delay-500"></div>
+    </div>
+
+    <div className="relative z-10 h-full flex flex-col min-h-0">
+      {/* Exciting header */}
+      <div className="flex-shrink-0 mb-4 text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full border border-purple-200/50 dark:border-purple-800/50 mb-3">
+          <Monitor className="h-4 w-4 text-purple-600 animate-pulse" />
+          <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
+            Application Preview (Image)
+          </span>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      {/* Interactive mockup preview */}
+      <div className="flex-1 min-h-0 relative">
+        <Card className="border-2 border-dashed border-purple-200/50 dark:border-purple-800/30 bg-gradient-to-br from-white/60 to-purple-50/30 dark:from-slate-900/60 dark:to-purple-950/20 h-full">
+          <CardContent className="p-4 h-full">
+            <div className="h-full flex flex-col">
+              {/* Mock browser header */}
+              <div className="flex items-center gap-2 p-2 bg-slate-100 dark:bg-slate-800 rounded-t-lg border-b border-slate-200 dark:border-slate-700 opacity-70">
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse delay-100"></div>
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-200"></div>
+                </div>
+                <div className="flex-1 mx-2 h-2 bg-slate-200 dark:bg-slate-700 rounded-full relative overflow-hidden">
+                  <div className="absolute inset-0 -translate-x-full animate-shimmer-slow bg-gradient-to-r from-transparent via-white/60 dark:via-slate-400/40 to-transparent"></div>
+                </div>
+              </div>
+
+              {/* Mock app content */}
+              <div className="flex-1 bg-white dark:bg-slate-900 rounded-b-lg p-3 space-y-3 relative overflow-hidden">
+                {/* Header section */}
+                <div className="flex items-center justify-between opacity-60">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded animate-pulse"></div>
+                    <div className="h-3 w-16 bg-slate-200 dark:bg-slate-700 rounded animate-pulse delay-100"></div>
+                  </div>
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full animate-pulse delay-200"></div>
+                    <div className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full animate-pulse delay-300"></div>
+                    <div className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full animate-pulse delay-400"></div>
+                  </div>
+                </div>
+
+                {/* Navigation */}
+                <div className="flex gap-2 opacity-50">
+                  <div className="h-2 w-12 bg-purple-200 dark:bg-purple-800/50 rounded animate-pulse"></div>
+                  <div className="h-2 w-10 bg-slate-200 dark:bg-slate-700 rounded animate-pulse delay-75"></div>
+                  <div className="h-2 w-14 bg-slate-200 dark:bg-slate-700 rounded animate-pulse delay-150"></div>
+                </div>
+
+                {/* Main content area */}
+                <div className="space-y-2 opacity-40">
+                  <div className="h-3 w-3/4 bg-slate-300 dark:bg-slate-600 rounded animate-pulse"></div>
+                  <div className="flex gap-2">
+                    <div className="flex-1 h-8 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded animate-pulse delay-100"></div>
+                    <div className="flex-1 h-8 bg-gradient-to-r from-pink-100 to-orange-100 dark:from-pink-900/30 dark:to-orange-900/30 rounded animate-pulse delay-200"></div>
+                  </div>
+                  <div className="h-2 w-1/2 bg-slate-200 dark:bg-slate-700 rounded animate-pulse delay-300"></div>
+                </div>
+
+                {/* Footer area */}
+                <div className="absolute bottom-2 left-3 right-3 opacity-30">
+                  <div className="flex justify-between items-center">
+                    <div className="h-1.5 w-16 bg-slate-200 dark:bg-slate-700 rounded animate-pulse"></div>
+                    <div className="flex gap-1">
+                      <div className="w-1 h-1 bg-purple-300 dark:bg-purple-700 rounded-full animate-bounce"></div>
+                      <div className="w-1 h-1 bg-pink-300 dark:bg-pink-700 rounded-full animate-bounce delay-100"></div>
+                      <div className="w-1 h-1 bg-orange-300 dark:bg-orange-700 rounded-full animate-bounce delay-200"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Glow effect overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/5 to-transparent animate-pulse"></div>
+              </div>
+
+              {/* Call to action */}
+              <div className="text-center mt-3 opacity-60">
+                <div className="flex justify-center space-x-1 mb-1">
+                  <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce"></div>
+                  <div className="w-1 h-1 bg-pink-400 rounded-full animate-bounce delay-100"></div>
+                  <div className="w-1 h-1 bg-orange-400 rounded-full animate-bounce delay-200"></div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+
+    <style>{`
+      @keyframes gradient-pulse {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.6; }
+      }
+      @keyframes shimmer-slow {
+        100% { transform: translateX(100%); }
+      }
+      .animate-gradient-pulse {
+        animation: gradient-pulse 4s ease-in-out infinite;
+      }
+      .animate-shimmer-slow {
+        animation: shimmer-slow 3s infinite;
+      }
+    `}</style>
   </div>
 );
 

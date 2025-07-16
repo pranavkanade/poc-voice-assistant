@@ -263,34 +263,133 @@ const DisplayState: React.FC<DisplayStateProps> = ({ prdContent }) => (
 );
 
 const SkeletonState: React.FC = () => (
-  <div className="h-full flex flex-col p-3 min-h-0">
-    <h3 className="text-base font-semibold mb-3 flex-shrink-0">
-      Your PRD will show up here...
-    </h3>
-    <div className="flex-1 min-h-0">
-      <Card className="shadow-none h-full">
-        <CardContent className="p-3 h-full">
-          <div className="space-y-3 h-full flex flex-col justify-start">
-            {/* Title */}
-            <Skeleton className="h-6 w-1/2 flex-shrink-0" />
+  <div className="h-full flex flex-col p-3 min-h-0 relative overflow-hidden">
+    {/* Animated background gradient */}
+    {/* <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/40 via-blue-50/40 to-purple-50/40 dark:from-emerald-950/20 dark:via-blue-950/20 dark:to-purple-950/20 animate-gradient-shift"></div> */}
 
-            {/* First section */}
-            <div className="space-y-2 flex-shrink-0">
-              <Skeleton className="h-4 w-1/4" />
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-3/4" />
-            </div>
-
-            {/* Second section */}
-            <div className="space-y-2 flex-shrink-0">
-              <Skeleton className="h-4 w-1/3" />
-              <Skeleton className="h-3 w-5/6" />
-              <Skeleton className="h-3 w-2/3" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    {/* Floating particles animation */}
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-emerald-400/30 rounded-full animate-float-slow"></div>
+      <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-blue-400/40 rounded-full animate-float-medium"></div>
+      <div className="absolute bottom-1/3 left-1/2 w-1.5 h-1.5 bg-purple-400/30 rounded-full animate-float-fast"></div>
     </div>
+
+    <div className="relative z-10 h-full flex flex-col min-h-0">
+      {/* Exciting header */}
+      <div className="flex-shrink-0 mb-4 text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-full border border-emerald-200/50 dark:border-emerald-800/50 mb-3">
+          <Sparkles className="h-4 w-4 text-emerald-600 animate-pulse" />
+          <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
+            Your AI-Powered PRD Awaits
+          </span>
+        </div>
+      </div>
+
+      {/* Preview content with examples */}
+      <div className="flex-1 min-h-0 relative">
+        <Card className="shadow-none h-full border-2 border-dashed border-emerald-200/50 dark:border-emerald-800/30 bg-gradient-to-br from-white/50 to-emerald-50/30 dark:from-slate-900/50 dark:to-emerald-950/20">
+          <CardContent className="p-4 h-full">
+            <div className="space-y-4 h-full flex flex-col justify-start">
+              {/* Sample title with shimmer effect */}
+              <div className="relative">
+                <div className="text-sm font-bold text-emerald-700 dark:text-emerald-300 mb-1 opacity-60">
+                  📋 Project Overview
+                </div>
+                {/* <div className="h-4 bg-gradient-to-r from-emerald-100 via-emerald-50 to-emerald-100 dark:from-emerald-900 dark:via-emerald-800 dark:to-emerald-900 rounded-md relative overflow-hidden">
+                  <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/60 dark:via-emerald-400/30 to-transparent"></div>
+                </div> */}
+              </div>
+
+              {/* Sample sections */}
+              <div className="space-y-3 flex-shrink-0">
+                <div className="opacity-50 transform hover:opacity-70 transition-all duration-300">
+                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1 flex items-center gap-1">
+                    🎯 <span>Core Features</span>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="h-2 w-full bg-blue-100 dark:bg-blue-900/30 rounded animate-pulse"></div>
+                    <div className="h-2 w-3/4 bg-blue-100 dark:bg-blue-900/30 rounded animate-pulse delay-100"></div>
+                    <div className="h-2 w-5/6 bg-blue-100 dark:bg-blue-900/30 rounded animate-pulse delay-200"></div>
+                  </div>
+                </div>
+
+                <div className="opacity-40 transform hover:opacity-60 transition-all duration-300">
+                  <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1 flex items-center gap-1">
+                    👥 <span>User Stories</span>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="h-2 w-5/6 bg-purple-100 dark:bg-purple-900/30 rounded animate-pulse"></div>
+                    <div className="h-2 w-2/3 bg-purple-100 dark:bg-purple-900/30 rounded animate-pulse delay-150"></div>
+                  </div>
+                </div>
+
+                <div className="opacity-30 transform hover:opacity-50 transition-all duration-300">
+                  <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-1 flex items-center gap-1">
+                    ⚡ <span>Technical Requirements</span>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="h-2 w-4/5 bg-orange-100 dark:bg-orange-900/30 rounded animate-pulse"></div>
+                    <div className="h-2 w-1/2 bg-orange-100 dark:bg-orange-900/30 rounded animate-pulse delay-75"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Call to action area */}
+              <div className="flex-1 flex items-end justify-center">
+                <div className="text-center py-2 opacity-60">
+                  <div className="flex justify-center space-x-1 mb-2">
+                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce"></div>
+                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce delay-75"></div>
+                    <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce delay-150"></div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Click the microphone to start building!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+
+    <style>{`
+      @keyframes shimmer {
+        100% { transform: translateX(100%); }
+      }
+      @keyframes gradient-shift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      @keyframes float-slow {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+      @keyframes float-medium {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(90deg); }
+      }
+      @keyframes float-fast {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(270deg); }
+      }
+      .animate-gradient-shift {
+        background-size: 200% 200%;
+        animation: gradient-shift 8s ease infinite;
+      }
+      .animate-float-slow {
+        animation: float-slow 6s ease-in-out infinite;
+      }
+      .animate-float-medium {
+        animation: float-medium 4s ease-in-out infinite;
+      }
+      .animate-float-fast {
+        animation: float-fast 3s ease-in-out infinite;
+      }
+      .animate-shimmer {
+        animation: shimmer 2s infinite;
+      }
+    `}</style>
   </div>
 );
 
