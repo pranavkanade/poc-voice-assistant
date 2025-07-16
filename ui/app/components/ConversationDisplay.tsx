@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { MessageCircle } from "lucide-react";
 
 import MessageBubble from "./MessageBubble";
@@ -29,34 +29,46 @@ const ConversationDisplay: React.FC<ConversationDisplayProps> = ({
   onSaveEdit,
   onCancelEdit,
 }) => {
-  const getLastTwoMessages = () => {
-    if (transcript.length === 0) return [];
-    if (transcript.length === 1) return [transcript[0]];
-    return transcript.slice(-2);
+  const allMessages = transcript;
+  const hasAssistantSpoken = transcript.some((msg) => msg.role === "assistant");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const lastTwoMessages = getLastTwoMessages();
-  const hasAssistantSpoken = transcript.some((msg) => msg.role === "assistant");
+  useEffect(() => {
+    scrollToBottom();
+  }, [transcript]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      {hasAssistantSpoken && lastTwoMessages.length > 0 ? (
-        <div className="space-y-6">
-          {lastTwoMessages.map((msg, index) => (
-            <MessageBubble
-              key={`center-${index}`}
-              message={msg}
-              isEditing={editingUserMessage && msg.role === "user"}
-              editedText={editedText}
-              onEditTextChange={onEditTextChange}
-              onStartEditing={onStartEditing}
-              onSaveEdit={onSaveEdit}
-              onCancelEdit={onCancelEdit}
-            />
-          ))}
+    <div className="h-full flex flex-col -mx-2">
+      {hasAssistantSpoken && allMessages.length > 0 ? (
+        <div
+          className="flex-1 overflow-y-auto space-y-3 py-2 scrollbar-hide"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
+          <div className="max-w-4xl mx-auto space-y-4">
+            {allMessages.map((msg, index) => (
+              <MessageBubble
+                key={`message-${index}`}
+                message={msg}
+                isEditing={editingUserMessage && msg.role === "user"}
+                editedText={editedText}
+                onEditTextChange={onEditTextChange}
+                onStartEditing={onStartEditing}
+                onSaveEdit={onSaveEdit}
+                onCancelEdit={onCancelEdit}
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center text-center py-12 space-y-8">
+        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6">
           <div className="space-y-6">
             <div className="flex justify-center">
               <div className="h-20 w-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">

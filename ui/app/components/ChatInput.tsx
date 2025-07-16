@@ -39,7 +39,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       const maxHeight = 200; // Max height in pixels
       textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
       textareaRef.current.style.overflowY =
-        scrollHeight > maxHeight ? "auto" : "hidden";
+        scrollHeight > maxHeight ? "scroll" : "hidden";
     }
   }, [message]);
 
@@ -79,9 +79,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
         </div>
       ) : (
         // Chat interface
-        <div className="w-full max-w-3xl mx-auto">
+        <div className="w-full">
           {/* Chat input form */}
-          <div className="relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div className="relative bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600">
             <form onSubmit={handleSubmit} className="relative">
               <div className="relative group">
                 <textarea
@@ -94,26 +94,30 @@ const ChatInput: React.FC<ChatInputProps> = ({
                       ? "AI is thinking..."
                       : "Describe what you want to build... (Press Enter to send, Shift+Enter for new line)"
                   }
-                  className="w-full resize-none rounded-2xl border-0 bg-transparent px-4 py-4 pr-14 text-base focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed min-h-[72px] transition-all duration-200 placeholder:text-gray-500 dark:placeholder:text-gray-400 overflow-hidden"
+                  className="w-full resize-none rounded-xl border-0 bg-transparent px-4 py-4 pr-14 text-base focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed min-h-[72px] transition-all duration-200 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                   disabled={isLoading}
                   rows={1}
-                  style={{ height: "72px" }}
+                  style={{
+                    height: "72px",
+                    scrollbarWidth: "thin",
+                    scrollbarColor: "#cbd5e1 transparent",
+                  }}
                   autoFocus
                 />
-                <div className="absolute right-3 bottom-3 flex items-center space-x-2">
+                <div className="absolute right-2 bottom-2 flex items-center space-x-2">
                   {isSpeaking && (
-                    <div className="flex items-center space-x-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-full">
+                    <div className="flex items-center space-x-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/50 rounded-full">
                       <div className="flex space-x-1">
                         <div
-                          className="w-1 h-1 bg-gray-500 rounded-full animate-bounce"
+                          className="w-1 h-1 bg-blue-500 rounded-full animate-bounce"
                           style={{ animationDelay: "0ms" }}
                         ></div>
                         <div
-                          className="w-1 h-1 bg-gray-500 rounded-full animate-bounce"
+                          className="w-1 h-1 bg-blue-500 rounded-full animate-bounce"
                           style={{ animationDelay: "150ms" }}
                         ></div>
                         <div
-                          className="w-1 h-1 bg-gray-500 rounded-full animate-bounce"
+                          className="w-1 h-1 bg-blue-500 rounded-full animate-bounce"
                           style={{ animationDelay: "300ms" }}
                         ></div>
                       </div>
@@ -123,12 +127,12 @@ const ChatInput: React.FC<ChatInputProps> = ({
                     type="submit"
                     size="sm"
                     disabled={!message.trim() || isLoading || isSpeaking}
-                    className="bg-black hover:bg-gray-800 disabled:bg-gray-300 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black border-0 transition-all duration-200 h-8 w-8 rounded-lg p-0 disabled:cursor-not-allowed"
+                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white border-0 transition-all duration-200 h-10 w-10 rounded-lg p-0 disabled:cursor-not-allowed flex items-center justify-center"
                   >
                     {isLoading ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      <Send className="h-3.5 w-3.5" />
+                      <Send className="h-4 w-4" />
                     )}
                   </Button>
                 </div>

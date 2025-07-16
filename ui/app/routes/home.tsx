@@ -95,39 +95,37 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         hasTranscript={transcript.length > 0}
         reset={reset}
       />
-      <div className="flex p-4 pt-20 h-screen gap-4">
+      <div className="flex p-2 pt-20 h-screen gap-4">
         <TranscriptPanel
           showTranscriptPanel={showTranscriptPanel}
           transcript={transcript}
           onClearTranscript={handleClearTranscript}
         />
-        <main className="flex items-center justify-center transition-all duration-300 flex-2/5">
-          <div className="w-full max-w-4xl mx-auto space-y-8">
-            {/* Conversation Display */}
-            <div className="flex justify-center">
-              <ConversationDisplay
-                transcript={transcript}
-                editingUserMessage={editingUserMessage}
-                editedText={editedText}
-                onEditTextChange={setEditedText}
-                onStartEditing={startEditing}
-                onSaveEdit={handleEditSave}
-                onCancelEdit={handleEditCancel}
-              />
-            </div>
+        <main className="flex flex-col h-full flex-2/5 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
+          {/* Conversation Display */}
+          <div className="flex-1 overflow-hidden p-3 px-4">
+            <ConversationDisplay
+              transcript={transcript}
+              editingUserMessage={editingUserMessage}
+              editedText={editedText}
+              onEditTextChange={setEditedText}
+              onStartEditing={startEditing}
+              onSaveEdit={handleEditSave}
+              onCancelEdit={handleEditCancel}
+            />
+          </div>
 
-            {/* Chat Input */}
-            <div className="flex justify-center">
-              <ChatInput
-                isConnected={isConnected}
-                isLoading={isLoading}
-                isSpeaking={isSpeaking}
-                onStartCall={startCall}
-                onEndCall={endCall}
-                onSendMessage={sendMessage}
-                transcript={transcript}
-              />
-            </div>
+          {/* Chat Input - Fixed at bottom */}
+          <div className="border-t border-gray-200 dark:border-gray-700 p-3">
+            <ChatInput
+              isConnected={isConnected}
+              isLoading={isLoading}
+              isSpeaking={isSpeaking}
+              onStartCall={startCall}
+              onEndCall={endCall}
+              onSendMessage={sendMessage}
+              transcript={transcript}
+            />
           </div>
         </main>
         <div className="flex flex-col gap-4 flex-3/5">

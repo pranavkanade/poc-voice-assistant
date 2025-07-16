@@ -368,3 +368,13 @@ body {
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
 }
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
