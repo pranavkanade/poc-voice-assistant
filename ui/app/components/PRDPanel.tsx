@@ -230,21 +230,17 @@ const EditingState: React.FC<EditingStateProps> = ({
   editedText,
   onEditText,
 }) => (
-  <div className="h-full p-4">
-    <div className="h-full flex flex-col space-y-3">
-      <div className="flex-1">
+  <div className="h-full flex flex-col min-h-0">
+    <ScrollArea className="flex-1 min-h-0">
+      <div className="p-4">
         <Textarea
           value={editedText}
           onChange={(e) => onEditText(e.target.value)}
           placeholder="Edit your PRD content here (Markdown format)..."
-          className="h-full resize-none border-2 border-dashed border-muted-foreground/20 focus:border-emerald-500 focus-visible:ring-emerald-500 text-sm leading-relaxed font-mono min-h-0"
+          className="w-full min-h-[400px] border-2 border-dashed border-muted-foreground/20 focus:border-emerald-500 focus-visible:ring-emerald-500 text-sm leading-relaxed font-mono"
         />
       </div>
-      <div className="text-xs text-muted-foreground bg-muted/50 rounded-md p-2 flex-shrink-0">
-        <strong>Tip:</strong> You can use Markdown formatting for better
-        structure
-      </div>
-    </div>
+    </ScrollArea>
   </div>
 );
 

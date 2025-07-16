@@ -35,7 +35,7 @@ const ProgressSection: React.FC = () => (
         </h3>
       </div>
       <div className="text-xs text-muted-foreground bg-purple-50 dark:bg-purple-950/20 px-2 py-1 rounded-full">
-        ⏱️ 30-60 seconds
+        ⏱️ 60-90 seconds
       </div>
     </div>
 
