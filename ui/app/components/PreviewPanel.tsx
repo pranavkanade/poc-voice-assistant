@@ -1,26 +1,37 @@
 import React from "react";
 import { Card, CardHeader, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { Monitor, Loader2, Sparkles, ImageIcon } from "lucide-react";
+import {
+  Monitor,
+  Loader2,
+  Sparkles,
+  ImageIcon,
+  Check,
+  Share,
+  Heart,
+} from "lucide-react";
 import { cn } from "../lib/utils";
+import { Button } from "./ui/button";
 
 interface PreviewPanelProps {
   showPreview: boolean;
   generatingPreview: boolean;
   generatedPreview: string | null;
   showPRD?: boolean;
+  onRegeneratePreview: () => void;
+  onResetApplication: () => void;
 }
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({
   showPreview,
   generatingPreview,
   generatedPreview,
+  onRegeneratePreview,
+  onResetApplication,
   showPRD = false,
 }) => {
-  if (!showPreview || (!generatingPreview && !generatedPreview)) return null;
-
   return (
-    <div className={cn("transition-all duration-300 flex-3/5")}>
+    <div className={cn("transition-all duration-300 flex-1/2")}>
       <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
         {/* Header */}
         <CardHeader className="flex-shrink-0 pb-4">
@@ -46,12 +57,33 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
         </CardHeader>
 
         {/* Content */}
-        <CardContent className="flex-1 overflow-hidden p-0">
+        <CardContent className="flex-1 overflow-hidden p-0 relative">
           {generatingPreview ? (
             <LoadingState />
           ) : generatedPreview ? (
             <PreviewDisplay preview={generatedPreview} />
           ) : null}
+          <div className="flex items-center justify-center gap-4 absolute bottom-0 right-4 shadow-2xl z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <Button
+              onClick={onRegeneratePreview}
+              variant="outline"
+              size="lg"
+              className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-colors"
+            >
+              <Sparkles className="size-4" />
+              Regenerate Preview
+            </Button>
+            <Button
+              // onClick={onResetApplication}
+              size="lg"
+              variant="secondary"
+              color="pink"
+              className="gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700 shadow-md"
+            >
+              <Heart className="size-5" />
+              Share
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

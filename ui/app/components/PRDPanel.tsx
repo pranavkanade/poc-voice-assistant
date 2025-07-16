@@ -27,8 +27,6 @@ interface PRDPanelProps {
   onStartEditingPRD: () => void;
   onSavePRDEdit: () => void;
   onCancelPRDEdit: () => void;
-  onRegeneratePreview: () => void;
-  onResetApplication: () => void;
 }
 
 const PRDPanel: React.FC<PRDPanelProps> = ({
@@ -43,13 +41,9 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
   onStartEditingPRD,
   onSavePRDEdit,
   onCancelPRDEdit,
-  onRegeneratePreview,
-  onResetApplication,
 }) => {
-  if (!showPRD || (!prdGenerating && !generatedPRD)) return null;
-
   return (
-    <div className={cn("transition-all duration-300 flex-2/5")}>
+    <div className={cn("transition-all duration-300 flex-1/2")}>
       <Card className="h-full flex flex-col shadow-sm border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
         {/* Header */}
         <CardHeader className="flex-shrink-0 pb-4">
@@ -124,25 +118,6 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
           ) : (
             <>
               <DisplayState prdContent={generatedPRD} />
-              <div className="flex items-center justify-center gap-8">
-                <Button
-                  onClick={onRegeneratePreview}
-                  variant="outline"
-                  size="lg"
-                  className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-colors h-14 text-lg"
-                >
-                  <Sparkles className="size-6 mr-3" />
-                  Regenerate Preview
-                </Button>
-                <Button
-                  onClick={onResetApplication}
-                  size="lg"
-                  className="gap-2 bg-green-600 hover:bg-green-700 text-white shadow-md h-14 text-lg"
-                >
-                  <Check className="size-6 mr-3" />
-                  Looks Good!
-                </Button>
-              </div>
             </>
           )}
         </CardContent>

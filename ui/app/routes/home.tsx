@@ -98,56 +98,56 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
           transcript={transcript}
           onClearTranscript={handleClearTranscript}
         />
-        <PRDPanel
-          showPRD={showPRD}
-          showTranscriptPanel={showTranscriptPanel}
-          showPreview={showPreview}
-          prdGenerating={prdGenerating}
-          generatedPRD={generatedPRD}
-          editingPRD={editingPRD}
-          editedPRDText={editedPRDText}
-          onEditPRDText={handleEditPRDText}
-          onStartEditingPRD={startEditingPRD}
-          onSavePRDEdit={savePRDEdit}
-          onCancelPRDEdit={cancelPRDEdit}
-          onRegeneratePreview={regeneratePreview}
-          onResetApplication={reset}
-        />
-        <PreviewPanel
-          showPreview={showPreview}
-          generatingPreview={generatingPreview}
-          generatedPreview={generatedPreview}
-          showPRD={!!(showPRD && (prdGenerating || generatedPRD))}
-        />
-        {!showPreview && (
-          <main className="flex items-center justify-center transition-all duration-300 flex-3/5">
-            <div className="w-full max-w-4xl mx-auto space-y-8">
-              {/* Conversation Display */}
-              <div className="flex justify-center">
-                <ConversationDisplay
-                  transcript={transcript}
-                  editingUserMessage={editingUserMessage}
-                  editedText={editedText}
-                  onEditTextChange={setEditedText}
-                  onStartEditing={startEditing}
-                  onSaveEdit={handleEditSave}
-                  onCancelEdit={handleEditCancel}
-                />
-              </div>
-
-              {/* Voice Control */}
-              <div className="flex justify-center">
-                <VoiceControl
-                  isConnected={isConnected}
-                  isLoading={isLoading}
-                  isSpeaking={isSpeaking}
-                  onStartCall={startCall}
-                  onEndCall={endCall}
-                />
-              </div>
+        <main className="flex items-center justify-center transition-all duration-300 flex-2/5">
+          <div className="w-full max-w-4xl mx-auto space-y-8">
+            {/* Conversation Display */}
+            <div className="flex justify-center">
+              <ConversationDisplay
+                transcript={transcript}
+                editingUserMessage={editingUserMessage}
+                editedText={editedText}
+                onEditTextChange={setEditedText}
+                onStartEditing={startEditing}
+                onSaveEdit={handleEditSave}
+                onCancelEdit={handleEditCancel}
+              />
             </div>
-          </main>
-        )}
+
+            {/* Voice Control */}
+            <div className="flex justify-center">
+              <VoiceControl
+                isConnected={isConnected}
+                isLoading={isLoading}
+                isSpeaking={isSpeaking}
+                onStartCall={startCall}
+                onEndCall={endCall}
+              />
+            </div>
+          </div>
+        </main>
+        <div className="flex flex-col gap-4 flex-3/5">
+          <PRDPanel
+            showPRD={showPRD}
+            showTranscriptPanel={showTranscriptPanel}
+            showPreview={showPreview}
+            prdGenerating={prdGenerating}
+            generatedPRD={generatedPRD}
+            editingPRD={editingPRD}
+            editedPRDText={editedPRDText}
+            onEditPRDText={handleEditPRDText}
+            onStartEditingPRD={startEditingPRD}
+            onSavePRDEdit={savePRDEdit}
+            onCancelPRDEdit={cancelPRDEdit}
+          />
+          <PreviewPanel
+            showPreview={showPreview}
+            generatingPreview={generatingPreview}
+            generatedPreview={generatedPreview}
+            showPRD={!!(showPRD && (prdGenerating || generatedPRD))}
+            onRegeneratePreview={regeneratePreview}
+            onResetApplication={reset}
+          />
+        </div>
       </div>
     </div>
   );

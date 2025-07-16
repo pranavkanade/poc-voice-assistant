@@ -67,6 +67,7 @@ export const usePRD = (
         setGeneratedPRD(prdData);
         setShowPRD(true);
         setPrdGenerating(false);
+        generatePreview(prdData);
       } else {
         console.error("Failed to generate PRD:", response.statusText);
         console.log("PRD generation failed - clearing loading state");
@@ -85,46 +86,42 @@ export const usePRD = (
     }
   }, [transcript]);
 
-  const generatePreview = useCallback(async () => {
-    try {
-      setGeneratingPreview(true);
-      setShowPreview(true);
-      const formData = new FormData();
-      formData.append("prd", generatedPRD as string);
-
-      const response = await fetch("/api/preview", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        const previewData = await response.json();
-        console.log("Preview generated successfully:", previewData);
-        setGeneratedPreview(previewData);
+  const generatePreview = useCallback(
+    async (prdData: string) => {
+      try {
+        setGeneratingPreview(true);
         setShowPreview(true);
-      } else {
-        console.error("Failed to generate preview:", response.statusText);
-        redirect("?preview_error=true");
+        const formData = new FormData();
+        formData.append("prd", prdData);
+
+        const response = await fetch("/api/preview", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          const previewData = await response.json();
+          console.log("Preview generated successfully:", previewData);
+          setGeneratedPreview(previewData);
+          setShowPreview(true);
+        } else {
+          console.error("Failed to generate preview:", response.statusText);
+          redirect("?preview_error=true");
+        }
+      } catch (error) {
+        console.error("Error generating preview:", error);
+      } finally {
+        setGeneratingPreview(false);
       }
-    } catch (error) {
-      console.error("Error generating preview:", error);
-    } finally {
-      setGeneratingPreview(false);
-    }
-  }, [generatedPRD]);
+    },
+    [generatedPRD],
+  );
 
   useEffect(() => {
     if (transcript.length - 1 >= 2 && isSpeaking && !prdGenerating) {
       submitPRD();
     }
   }, [transcript.length, isSpeaking, submitPRD, prdGenerating]);
-
-  useEffect(() => {
-    if (!isConnected && !prdGenerating && !!generatedPRD) {
-      console.log("Preview generation started!");
-      generatePreview();
-    }
-  }, [isConnected, prdGenerating, generatedPRD, generatePreview]);
 
   useEffect(() => {
     return () => {
@@ -157,7 +154,7 @@ export const usePRD = (
 
   const regeneratePreview = useCallback(() => {
     if (generatedPRD) {
-      generatePreview();
+      generatePreview(generatedPRD);
     }
   }, [generatedPRD, generatePreview]);
 
