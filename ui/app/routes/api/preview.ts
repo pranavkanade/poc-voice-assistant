@@ -1,6 +1,16 @@
 import OpenAI from "openai";
 
-export async function getPreview(prd: string) {
+type Quality =
+  | "low"
+  | "auto"
+  | "standard"
+  | "hd"
+  | "medium"
+  | "high"
+  | null
+  | undefined;
+
+export async function getPreview(prd: string, quality: Quality) {
   const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -96,7 +106,7 @@ export async function getPreview(prd: string) {
       </INPUT>
       `,
     size: "1536x1024",
-    quality: "high",
+    quality: quality ?? "low",
     output_format: "png",
   });
   // console.log(JSON.stringify(response));
@@ -106,6 +116,7 @@ export async function getPreview(prd: string) {
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
   const prd = formData.get("prd") as string;
-  const previewResp = await getPreview(prd);
+  const quality = formData.get("quality") as Quality;
+  const previewResp = await getPreview(prd, quality);
   return Response.json(previewResp);
 }

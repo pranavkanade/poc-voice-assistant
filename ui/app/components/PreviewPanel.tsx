@@ -22,6 +22,7 @@ interface PreviewPanelProps {
   showPRD?: boolean;
   onRegeneratePreview: () => void;
   onResetApplication: () => void;
+  isGeneratingFinalPreview: boolean;
 }
 
 const ProgressSection: React.FC = () => (
@@ -86,6 +87,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   onRegeneratePreview,
   onResetApplication,
   showPRD = false,
+  isGeneratingFinalPreview = false,
 }) => {
   return (
     <div
@@ -115,19 +117,23 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
                 </Badge>
               </div>
             </div>
-            {generatingPreview && <ProgressSection />}
-            {!!generatedPreview && !generatingPreview && (
-              <Toolbar
-                onRegeneratePreview={onRegeneratePreview}
-                onResetApplication={onResetApplication}
-              />
+            {(generatingPreview || isGeneratingFinalPreview) && (
+              <ProgressSection />
             )}
+            {!!generatedPreview &&
+              !generatingPreview &&
+              !isGeneratingFinalPreview && (
+                <Toolbar
+                  onRegeneratePreview={onRegeneratePreview}
+                  onResetApplication={onResetApplication}
+                />
+              )}
           </div>
         </CardHeader>
 
         {/* Content */}
         <CardContent className="flex-1 overflow-hidden p-0 relative min-h-0">
-          {generatingPreview ? (
+          {generatingPreview || isGeneratingFinalPreview ? (
             <LoadingState />
           ) : generatedPreview ? (
             <PreviewDisplay preview={generatedPreview} />
@@ -274,7 +280,7 @@ const LoadingState: React.FC = () => (
       </div>
     </div>
 
-    <style jsx>{`
+    <style>{`
       @keyframes progress {
         0% {
           width: 0%;

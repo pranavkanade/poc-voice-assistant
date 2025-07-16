@@ -211,7 +211,7 @@ const LoadingState: React.FC = () => (
       </Card>
     </div>
 
-    <style jsx>{`
+    <style>{`
       @keyframes shimmer {
         100% {
           transform: translateX(100%);

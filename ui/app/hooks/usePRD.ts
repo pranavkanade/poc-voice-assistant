@@ -21,6 +21,9 @@ export const usePRD = (
   const [generatingPreview, setGeneratingPreview] = useState(false);
   const [generatedPreview, setGeneratedPreview] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [isFinalPreview, setIsFinalPreview] = useState(false);
+  const [isGeneratingFinalPreview, setIsGeneratingFinalPreview] =
+    useState(false);
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -67,7 +70,7 @@ export const usePRD = (
         setGeneratedPRD(prdData);
         setShowPRD(true);
         setPrdGenerating(false);
-        generatePreview(prdData);
+        !!isConnected && !generatingPreview && generatePreview(prdData);
       } else {
         console.error("Failed to generate PRD:", response.statusText);
         console.log("PRD generation failed - clearing loading state");
@@ -84,15 +87,20 @@ export const usePRD = (
         abortControllerRef.current = null;
       }
     }
-  }, [transcript]);
+  }, [transcript, isConnected]);
 
   const generatePreview = useCallback(
-    async (prdData: string) => {
+    async (prdData: string, quality?: string, isFinal?: boolean) => {
       try {
+        if (!!generatingPreview && !isFinal) return;
         setGeneratingPreview(true);
+        if (isFinal) {
+          setIsGeneratingFinalPreview(true);
+        }
         setShowPreview(true);
         const formData = new FormData();
         formData.append("prd", prdData);
+        formData.append("quality", quality || "low");
 
         const response = await fetch("/api/preview", {
           method: "POST",
@@ -112,6 +120,9 @@ export const usePRD = (
         console.error("Error generating preview:", error);
       } finally {
         setGeneratingPreview(false);
+        if (isFinal) {
+          setIsGeneratingFinalPreview(false);
+        }
       }
     },
     [generatedPRD],
@@ -122,6 +133,27 @@ export const usePRD = (
       submitPRD();
     }
   }, [transcript.length, isSpeaking, submitPRD, prdGenerating]);
+
+  useEffect(() => {
+    if (
+      !isFinalPreview &&
+      !isConnected &&
+      !prdGenerating &&
+      !!showPRD &&
+      !!generatedPRD &&
+      !!generatedPreview
+    ) {
+      generatePreview(generatedPRD, "high", true);
+      setIsFinalPreview(true);
+    }
+  }, [
+    isConnected,
+    prdGenerating,
+    showPRD,
+    generatedPRD,
+    generatedPreview,
+    isFinalPreview,
+  ]);
 
   useEffect(() => {
     return () => {
@@ -154,7 +186,7 @@ export const usePRD = (
 
   const regeneratePreview = useCallback(() => {
     if (generatedPRD) {
-      generatePreview(generatedPRD);
+      generatePreview(generatedPRD, "high", true);
     }
   }, [generatedPRD, generatePreview]);
 
@@ -167,6 +199,8 @@ export const usePRD = (
     setGeneratingPreview(false);
     setGeneratedPreview(null);
     setShowPreview(false);
+    setIsFinalPreview(false);
+    setIsGeneratingFinalPreview(false);
 
     // Cancel any ongoing requests
     if (abortControllerRef.current) {
@@ -190,5 +224,6 @@ export const usePRD = (
     handleEditPRDText,
     regeneratePreview,
     resetApplication,
+    isGeneratingFinalPreview,
   };
 };

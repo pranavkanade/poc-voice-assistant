@@ -40,6 +40,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
     handleEditPRDText,
     regeneratePreview,
     resetApplication,
+    isGeneratingFinalPreview,
   } = usePRD(transcript, isSpeaking, isConnected);
 
   const [editingUserMessage, setEditingUserMessage] = useState(false);
@@ -146,6 +147,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
             showPRD={!!(showPRD && (prdGenerating || generatedPRD))}
             onRegeneratePreview={regeneratePreview}
             onResetApplication={reset}
+            isGeneratingFinalPreview={isGeneratingFinalPreview}
           />
         </div>
       </div>
