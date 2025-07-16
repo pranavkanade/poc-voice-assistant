@@ -9,11 +9,13 @@ import {
   Check,
   Share,
   Heart,
+  Expand,
 } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 
 interface PreviewPanelProps {
   showPreview: boolean;
@@ -56,7 +58,8 @@ const ProgressSection: React.FC = () => (
 const Toolbar: React.FC<{
   onRegeneratePreview: () => void;
   onResetApplication: () => void;
-}> = ({ onRegeneratePreview, onResetApplication }) => (
+  preview: string;
+}> = ({ onRegeneratePreview, onResetApplication, preview }) => (
   <div className="flex items-center justify-center gap-4">
     <Button
       onClick={onRegeneratePreview}
@@ -77,6 +80,41 @@ const Toolbar: React.FC<{
       <Heart className="size-5" />
       Share
     </Button>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          size="lg"
+          className="gap-2 hover:bg-purple-50 hover:border-purple-300 transition-colors"
+        >
+          <Expand className="size-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        className="!max-w-[98vw] !w-[98vw] max-h-[95vh] h-[95vh] p-1 sm:!max-w-[98vw]"
+        showCloseButton={true}
+      >
+        <div className="flex items-center p-4 gap-4">
+          <Button
+            // onClick={onResetApplication}
+            size="lg"
+            variant="secondary"
+            color="pink"
+            className="gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700 shadow-md"
+          >
+            <Heart className="size-5" />
+            Share
+          </Button>
+        </div>
+        <div className="relative w-full h-full flex items-center justify-center">
+          <img
+            src={`data:image/png;base64,${preview}`}
+            alt="Expanded Application Preview"
+            className="w-[90%] h-[90%] object-contain rounded-lg"
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
   </div>
 );
 
@@ -126,6 +164,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
                 <Toolbar
                   onRegeneratePreview={onRegeneratePreview}
                   onResetApplication={onResetApplication}
+                  preview={generatedPreview}
                 />
               )}
           </div>

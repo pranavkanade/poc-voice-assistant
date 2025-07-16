@@ -92,6 +92,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
         showTranscriptPanel={showTranscriptPanel}
         onToggleTranscript={toggleTranscriptPanel}
         hasTranscript={transcript.length > 0}
+        reset={reset}
       />
       <div className="flex p-4 pt-20 h-screen gap-4">
         <TranscriptPanel

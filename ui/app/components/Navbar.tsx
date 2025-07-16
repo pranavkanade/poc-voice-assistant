@@ -1,13 +1,14 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { FileText } from "lucide-react";
+import { FileText, Trash } from "lucide-react";
 
 interface NavbarProps {
   className?: string;
   showTranscriptPanel?: boolean;
   onToggleTranscript?: () => void;
   hasTranscript?: boolean;
+  reset: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
@@ -15,6 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({
   showTranscriptPanel = false,
   onToggleTranscript,
   hasTranscript = false,
+  reset,
 }) => {
   return (
     <nav
@@ -46,6 +48,11 @@ const Navbar: React.FC<NavbarProps> = ({
                   {showTranscriptPanel ? "Hide" : "Show"} Transcript
                 </span>
                 <span className="sm:hidden">Transcript</span>
+              </Button>
+            )}
+            {hasTranscript && (
+              <Button size="sm" onClick={reset} className="gap-2">
+                <Trash className="h-4 w-4" />
               </Button>
             )}
           </div>
