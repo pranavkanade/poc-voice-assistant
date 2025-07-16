@@ -1,4 +1,5 @@
 import React from "react";
+import { MessageCircle } from "lucide-react";
 
 import MessageBubble from "./MessageBubble";
 
@@ -55,52 +56,22 @@ const ConversationDisplay: React.FC<ConversationDisplayProps> = ({
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center text-center py-16 space-y-6">
+        <div className="flex flex-col items-center justify-center text-center py-12 space-y-8">
           <div className="space-y-6">
             <div className="flex justify-center">
-              <div className="h-16 w-16 rounded-full bg-blue-600 flex items-center justify-center">
-                <svg
-                  className="h-8 w-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 10v1a7 7 0 0 1-14 0v-1"
-                  />
-                  <line
-                    x1="12"
-                    y1="19"
-                    x2="12"
-                    y2="23"
-                    strokeLinecap="round"
-                    strokeWidth={2}
-                  />
-                  <line
-                    x1="8"
-                    y1="23"
-                    x2="16"
-                    y2="23"
-                    strokeLinecap="round"
-                    strokeWidth={2}
-                  />
-                </svg>
+              <div className="h-20 w-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">
+                <MessageCircle className="h-9 w-9 text-white" />
               </div>
             </div>
-            <h2 className="text-5xl font-bold">What Do You Want To Build?</h2>
-            <p className="text-muted-foreground text-sm max-w-md mx-auto leading-relaxed">
-              Your conversation will appear here once you begin speaking. Start
-              by clicking the microphone button below.
-            </p>
+            <div className="space-y-3">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                What Do You Want To Build?
+              </h2>
+              <p className="text-muted-foreground text-base max-w-lg mx-auto leading-relaxed">
+                Describe your application idea and I'll help you create a
+                detailed product requirements document and preview.
+              </p>
+            </div>
           </div>
         </div>
       )}

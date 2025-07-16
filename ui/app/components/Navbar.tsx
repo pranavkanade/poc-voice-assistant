@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 Appbuilder
               </h1>
               <Badge variant="secondary" className="text-xs font-medium">
-                Voice Assistant
+                Chat Assistant
               </Badge>
             </div>
           </div>
@@ -51,8 +51,14 @@ const Navbar: React.FC<NavbarProps> = ({
               </Button>
             )}
             {hasTranscript && (
-              <Button size="sm" onClick={reset} className="gap-2">
+              <Button
+                size="sm"
+                onClick={reset}
+                className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20"
+                variant="outline"
+              >
                 <Trash className="h-4 w-4" />
+                <span className="hidden sm:inline">Reset</span>
               </Button>
             )}
           </div>

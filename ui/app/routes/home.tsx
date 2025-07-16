@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
-import VoiceControl from "../components/VoiceControl";
+import ChatInput from "../components/ChatInput";
 import ConversationDisplay from "../components/ConversationDisplay";
 import TranscriptPanel from "../components/TranscriptPanel";
 import PRDPanel from "../components/PRDPanel";
 import PreviewPanel from "../components/PreviewPanel";
-import { useVapi } from "../hooks/useVapi";
+import { useChat } from "../hooks/useChat";
 import { usePRD } from "../hooks/usePRD";
 
 interface VapiWidgetProps {
@@ -23,7 +23,8 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
     updateUserMessage,
     clearTranscript,
     resetVapi,
-  } = useVapi();
+    sendMessage,
+  } = useChat();
 
   const {
     prdGenerating,
@@ -115,14 +116,16 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({ config = {} }) => {
               />
             </div>
 
-            {/* Voice Control */}
+            {/* Chat Input */}
             <div className="flex justify-center">
-              <VoiceControl
+              <ChatInput
                 isConnected={isConnected}
                 isLoading={isLoading}
                 isSpeaking={isSpeaking}
                 onStartCall={startCall}
                 onEndCall={endCall}
+                onSendMessage={sendMessage}
+                transcript={transcript}
               />
             </div>
           </div>
