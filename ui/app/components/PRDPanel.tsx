@@ -132,27 +132,92 @@ const PRDPanel: React.FC<PRDPanelProps> = ({
 };
 
 const LoadingState: React.FC = () => (
-  <div className="flex flex-col items-center justify-center h-full p-4">
-    <div className="relative mb-6">
-      <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-2xl blur-xl"></div>
-      <Card className="relative bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-emerald-950/20 dark:to-blue-950/20 border border-emerald-200 dark:border-emerald-800 p-8 shadow-lg">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="relative">
-            <Loader2 className="h-8 w-8 text-emerald-600 animate-spin" />
-            <div className="absolute inset-0 h-8 w-8 border-2 border-emerald-200 rounded-full animate-pulse"></div>
+  <div className="h-full flex flex-col p-3 min-h-0">
+    <div className="flex items-center gap-2 mb-3 flex-shrink-0">
+      <Loader2 className="h-4 w-4 text-emerald-600 animate-spin" />
+      <h3 className="text-base font-semibold">
+        <span className="inline-block animate-pulse mr-4">Generating PRD</span>
+        <span className="inline-block animate-bounce delay-100">.</span>
+        <span className="inline-block animate-bounce delay-200">.</span>
+        <span className="inline-block animate-bounce delay-300">.</span>
+      </h3>
+    </div>
+    <div className="flex-1 min-h-0 relative">
+      {/* Background animated gradient */}
+      <div className="absolute inset-0 bg-gradient-to-r from-emerald-50/30 via-blue-50/30 to-emerald-50/30 dark:from-emerald-950/10 dark:via-blue-950/10 dark:to-emerald-950/10 animate-pulse"></div>
+
+      <Card className="shadow-none h-full relative z-10 bg-transparent">
+        <CardContent className="p-3 h-full">
+          <div className="space-y-3 h-full flex flex-col justify-start">
+            {/* Title */}
+            <div className="h-6 w-1/2 flex-shrink-0 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded relative overflow-hidden animate-pulse">
+              <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent dark:via-slate-500/60"></div>
+            </div>
+
+            {/* First section */}
+            <div className="space-y-2 flex-shrink-0 animate-pulse delay-200">
+              <div className="h-4 w-1/4 bg-gradient-to-r from-emerald-200 via-emerald-100 to-emerald-200 dark:from-emerald-800 dark:via-emerald-700 dark:to-emerald-800 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_0.3s] bg-gradient-to-r from-transparent via-white/50 to-transparent dark:via-emerald-500/50"></div>
+              </div>
+              <div className="h-3 w-full bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_0.4s] bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-slate-500/40"></div>
+              </div>
+              <div className="h-3 w-3/4 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_0.5s] bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-slate-500/40"></div>
+              </div>
+              <div className="h-3 w-5/6 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_0.6s] bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-slate-500/40"></div>
+              </div>
+            </div>
+
+            {/* Second section */}
+            <div className="space-y-2 flex-shrink-0 animate-pulse delay-500">
+              <div className="h-4 w-1/3 bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200 dark:from-blue-800 dark:via-blue-700 dark:to-blue-800 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_0.8s] bg-gradient-to-r from-transparent via-white/50 to-transparent dark:via-blue-500/50"></div>
+              </div>
+              <div className="h-3 w-5/6 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_0.9s] bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-slate-500/40"></div>
+              </div>
+              <div className="h-3 w-2/3 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_1s] bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-slate-500/40"></div>
+              </div>
+              <div className="h-3 w-4/5 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_1.1s] bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-slate-500/40"></div>
+              </div>
+            </div>
+
+            {/* Third section */}
+            <div className="space-y-2 flex-shrink-0 animate-pulse delay-700">
+              <div className="h-4 w-1/4 bg-gradient-to-r from-emerald-200 via-emerald-100 to-emerald-200 dark:from-emerald-800 dark:via-emerald-700 dark:to-emerald-800 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_1.3s] bg-gradient-to-r from-transparent via-white/50 to-transparent dark:via-emerald-500/50"></div>
+              </div>
+              <div className="h-3 w-full bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_1.4s] bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-slate-500/40"></div>
+              </div>
+              <div className="h-3 w-3/4 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded relative overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite_1.5s] bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-slate-500/40"></div>
+              </div>
+            </div>
+
+            {/* Progress indicators */}
+            <div className="flex space-x-1 mt-4 flex-shrink-0">
+              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse delay-200"></div>
+              <div className="w-2 h-2 bg-emerald-300 rounded-full animate-pulse delay-400"></div>
+              <div className="w-2 h-2 bg-emerald-200 rounded-full animate-pulse delay-600"></div>
+            </div>
           </div>
-          <div className="text-center space-y-2">
-            <h4 className="text-lg font-semibold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-              Generating PRD...
-            </h4>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              Analyzing your conversation and creating a comprehensive product
-              requirements document
-            </p>
-          </div>
-        </div>
+        </CardContent>
       </Card>
     </div>
+
+    <style jsx>{`
+      @keyframes shimmer {
+        100% {
+          transform: translateX(100%);
+        }
+      }
+    `}</style>
   </div>
 );
 
