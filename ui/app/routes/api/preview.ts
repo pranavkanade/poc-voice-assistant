@@ -97,6 +97,7 @@ export async function getPreview(prd: string) {
       `,
     size: "1536x1024",
     quality: "high",
+    background: "transparent",
     output_format: "png",
   });
   // console.log(JSON.stringify(response));

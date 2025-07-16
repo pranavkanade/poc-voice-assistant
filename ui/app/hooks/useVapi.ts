@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Vapi from "@vapi-ai/web";
 
 const apiKey: string = "6a1cc0d7-d71f-4ef3-a9dc-74bb0f88e342";
-const assistantId: string = "225496a9-74f9-49b5-8fb0-326e9550f427";
+const assistantId: string = "9b99af12-d47f-4f2b-a3f3-fd7910fcc267";
 
 interface Message {
   role: string;
