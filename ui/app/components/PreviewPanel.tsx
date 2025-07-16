@@ -10,6 +10,7 @@ import {
   Share,
   Heart,
   Expand,
+  Hammer,
 } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import { ScrollArea } from "./ui/scroll-area";
@@ -68,17 +69,27 @@ const Toolbar: React.FC<{
       className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-colors"
     >
       <Sparkles className="size-4" />
-      Regenerate Preview
+      Regenerate
     </Button>
     <Button
       // onClick={onResetApplication}
       size="lg"
       variant="secondary"
       color="pink"
-      className="gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700 shadow-md"
+      className="gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700"
     >
       <Heart className="size-5" />
       Share
+    </Button>
+    <Button
+      // onClick={onResetApplication}
+      size="lg"
+      variant="default"
+      color="pink"
+      className="gap-2 bg-indigo-500 hover:bg-indigo-700"
+    >
+      <Hammer className="size-5" />
+      Generate Application
     </Button>
     <Dialog>
       <DialogTrigger asChild>
@@ -100,10 +111,20 @@ const Toolbar: React.FC<{
             size="lg"
             variant="secondary"
             color="pink"
-            className="gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700 shadow-md"
+            className="gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700"
           >
             <Heart className="size-5" />
             Share
+          </Button>
+          <Button
+            // onClick={onResetApplication}
+            size="lg"
+            variant="default"
+            color="pink"
+            className="gap-2 bg-indigo-500 hover:bg-indigo-700"
+          >
+            <Hammer className="size-5" />
+            Generate Application
           </Button>
         </div>
         <div className="relative w-full h-full flex items-center justify-center">
@@ -378,6 +399,10 @@ const PreviewDisplay: React.FC<PreviewDisplayProps> = ({ preview }) => (
   <div className="h-full p-3 min-h-0">
     <div className="h-full flex flex-col space-y-3 min-h-0">
       <div className="flex-1 relative min-h-0">
+        <span className="mb-1 bg-gray-100 py-1 px-2 rounded-2xl">
+          Generated from the requirements above. Please edit them if you need
+          something else.
+        </span>
         <Card className="h-full overflow-hidden p-0 border-none">
           <CardContent className="p-0 h-full">
             <div className="relative h-full flex items-center justify-center">
