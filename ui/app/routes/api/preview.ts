@@ -106,7 +106,7 @@ export async function getPreview(prd: string, quality: Quality) {
       </INPUT>
       `,
     size: "1536x1024",
-    quality: quality ?? "medium",
+    quality: quality ?? "high",
     output_format: "png",
   });
   // console.log(JSON.stringify(response));
